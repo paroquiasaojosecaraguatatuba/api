@@ -1,15 +1,21 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "app",
+  "name": "api",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-27",
-  "account_id": "309e86d52409580e543ecf949c110d4d"
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
+  "account_id": "309e86d52409580e543ecf949c110d4d",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "ENVIRONMENT": "production"
+  },
+  "dev": {
+    "ip": "localhost",
+    "port": 3333,
+    "local_protocol": "https",
+    "upstream_protocol": "https"
+  }
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
