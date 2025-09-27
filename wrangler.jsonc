@@ -8,14 +8,15 @@
     "nodejs_compat"
   ],
   "vars": {
-    "ENVIRONMENT": "production"
+    "ENVIRONMENT": "development"
   },
+  "workers_dev": true,
   "dev": {
     "ip": "localhost",
     "port": 3333,
     "local_protocol": "https",
     "upstream_protocol": "https"
-  }
+  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
@@ -28,13 +29,13 @@
   //     "bucket_name": "my-bucket"
   //   }
   // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
-  //   }
-  // ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "parish_db_dev",
+      "database_id": "DUMMY_ID_FOR_LOCAL_DEV"
+    }
+  ],
   // "ai": {
   //   "binding": "AI"
   // },
