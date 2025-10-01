@@ -1,19 +1,8 @@
 @baseUrl = https://localhost:3333
+@token = yAPfUX9otAHcwC4k.aTgmr/rmNcqNCu0/3yeqJqsvN6vARMOtw7Y48PZstJAoi8HTNsaLCTncRZ8gBO3zV3E1yCrkRwqZV2gNMVsEmKuPPHal7Zr11HTEgIXqpzYzQDitBJASzhyTmMpRDFcT9zbVVAbSG4ZILpA7Lms17bAg7J93H0i4hYJjPR4eSb2QPqSo4AYiM2+5XFo6LQ==.b143TppdFksL0YySbQUs9i83yJ5eFCWHimJOhq7OQXM=
 
 # health-check
 GET {{baseUrl}}/health-check
-
-###
-
-# create-user
-POST {{baseUrl}}/user
-Content-Type: application/json
-
-{
-  "email": "giselle@gmail.com",
-  "password": "123456",
-  "role": "admin"
-}
 
 ###
 
@@ -24,4 +13,17 @@ Content-Type: application/json
 {
   "email": "giselle@gmail.com",
   "password": "123456"
+}
+
+###
+
+# create-user
+POST {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "email": "gisellehoekveld@gmail.com",
+  "password": "123456",
+  "role": "admin"
 }

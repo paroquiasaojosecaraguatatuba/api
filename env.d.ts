@@ -7,10 +7,17 @@ declare global {
   type Variables = {
     // dbClient: PoolClient;
     dbClient: any;
+    user: {
+      id: string;
+      email: string;
+      role: string;
+    }
   };
 
   type Env = {
     ENVIRONMENT: "development" | "production";
+    ENCRYPTION_SECRET: string;
+    SIGNING_SECRET: string;
 
     // Logging
     ENABLE_PERFORMANCE_LOG: boolean;

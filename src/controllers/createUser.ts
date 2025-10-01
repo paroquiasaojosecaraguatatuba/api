@@ -9,6 +9,15 @@ type Input = {
 export const createUser: ControllerFunction = async (c) => {
   const {email, password, role} = c.env.data as Input;
 
+  const existingUser = await c.env.DB
+    .prepare('SELECT id FROM users WHERE email = ?')
+    .bind(email)
+    .first<{ id: string }>();
+
+  if (existingUser) {
+    return c.json({ message: 'Email já está em uso.' }, 400);
+  }
+
   const hashedPassword = await hashPassword(password);
 
   await c.env.DB

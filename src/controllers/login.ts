@@ -1,4 +1,4 @@
-import { verifyPassword } from "serverless-crypto-utils";
+import {  verifyPassword, createAccessToken } from "serverless-crypto-utils";
 
 type Input = {
   email: string;
@@ -9,10 +9,13 @@ export const login: ControllerFunction = async (c) => {
   const {email, password} = c.env.data as Input;
 
   const user = await c.env.DB
-    .prepare('SELECT password_hash FROM users WHERE email = ?')
+    .prepare('SELECT id, email, password_hash, role FROM users WHERE email = ?')
     .bind(email)
     .first<{
+      id: string,
+      email: string,
       password_hash: string
+      role: string
     }>()
 
   if (!user) {
@@ -25,5 +28,18 @@ export const login: ControllerFunction = async (c) => {
     return c.json({ message: 'Email ou senha inválidos.' }, 401)
   }
 
-  return c.json({ message: 'Usuário autenticado com sucesso!' });
+  const accessToken = await createAccessToken({
+    encryptionSecret: c.env.ENCRYPTION_SECRET,
+    signingSecret: c.env.SIGNING_SECRET,
+    payload: {
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      }
+    },
+    expiresInSeconds: 3600 // 1 hora
+  }) 
+
+  return c.json({ accessToken });
 }
