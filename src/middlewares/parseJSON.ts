@@ -1,8 +1,6 @@
-import type { Context, Next } from "hono";
-
-export const parseJSON = async (
-  c: Context<{ Bindings: Bindings }>,
-  next: Next
+export const parseJSON: MiddlewareFunction = async (
+  c,
+  next
 ) => {
   try {
     if (
@@ -11,7 +9,7 @@ export const parseJSON = async (
       c.req.method === "PATCH"
     ) {
       const body = await c.req.json();
-      c.env.data = body;
+      c.set("inputs", body);
     }
 
     return await next();

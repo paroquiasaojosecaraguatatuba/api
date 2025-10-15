@@ -1,18 +1,56 @@
-import type { Context } from "hono";
 import type { HTTPResponseError } from "hono/types";
+import z, { ZodError } from "zod";
 import { log } from "../services/log";
+import { getAppContext } from "@/utils/getAppContext";
+import { DatabaseError } from "@/errors/DatabaseError";
 
 export const onAppError = async (
   error: Error | HTTPResponseError,
-  c: Context<{Bindings: Bindings}>
+  c: DomainContext
 ) => {
+  const {t, inputs} = getAppContext(c)
+
+  if (error instanceof ZodError) {
+    return c.json(
+      {
+        message: t('error-validation'),
+        errors: error.issues.map((err: z.core.$ZodIssue) => ({
+          field: err.path.join('.'),
+          message: err.message,
+        }))
+      },
+      400
+    );
+  }
+
+  if (error instanceof DatabaseError) {
+    c.executionCtx.waitUntil(
+      log({
+        env: c.env,
+        data: {
+          endpoint: c.req.url,
+          method: c.req.method,
+          inputs
+        },
+        error,
+      })
+    );
+
+    return c.json(
+      {
+        message: t('error-internal-server')
+      },
+      500
+    );
+  }
+
   c.executionCtx.waitUntil(
     log({
       env: c.env,
       data: {
         endpoint: c.req.url,
         method: c.req.method,
-        input: c.env.data,
+        inputs
       },
       error,
     })
@@ -20,7 +58,7 @@ export const onAppError = async (
 
   return c.json(
     {
-      message: 'Erro interno do servidor. Por favor, tente novamente mais tarde.',
+      message: t('error-internal-server')
     },
     500
   );

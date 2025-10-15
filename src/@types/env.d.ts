@@ -1,17 +1,23 @@
-import type { Context, TypedResponse } from "hono";
+import type { Context, TypedResponse, Next } from "hono";
+import {TranslatorFn} from "@/dictionaries";
+import {IDAF} from '@/services/database'
 
 declare global {
   type DomainContext = Context<{ Bindings: Bindings; Variables: Variables }>;
   type ControllerFunction = (c: DomainContext) => Promise<TypedResponse>;
+  type MiddlewareFunction = (c: DomainContext, next: Next) => Promise<void | TypedResponse>;
 
   type Variables = {
-    // dbClient: PoolClient;
-    dbClient: any;
+    dictionary: TranslatorFn
+    daf: IDAF;
     user: {
       id: string;
       email: string;
       role: string;
     }
+    timezone: string
+    timezoneOffset: string
+    inputs: any;
   };
 
   type Env = {
@@ -33,17 +39,6 @@ declare global {
   };
 
   type Bindings = Env & {
-    /** Service Bindings */
     DB: D1Database;
-
-    /** External Services */
-
-    /** Configurations */
-    payload: {
-      timezoneOffset: string;
-    };
-
-    /** Request Body Parsed */
-    data: any;
   };
 }

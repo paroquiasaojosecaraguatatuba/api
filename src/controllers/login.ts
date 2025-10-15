@@ -1,31 +1,24 @@
-import {  verifyPassword, createAccessToken } from "serverless-crypto-utils";
-
-type Input = {
-  email: string;
-  password: string;
-}
+import { useLoginSchema } from "@/schemas/useLoginSchema";
+import { getAppContext } from "@/utils/getAppContext";
+import { verifyPassword, createAccessToken } from "serverless-crypto-utils";
 
 export const login: ControllerFunction = async (c) => {
-  const {email, password} = c.env.data as Input;
+  const {daf, inputs, t} = getAppContext(c)
 
-  const user = await c.env.DB
-    .prepare('SELECT id, email, password_hash, role FROM users WHERE email = ?')
-    .bind(email)
-    .first<{
-      id: string,
-      email: string,
-      password_hash: string
-      role: string
-    }>()
+  const loginSchema = useLoginSchema(t)
+
+  const {email, password} = loginSchema.parse(inputs)
+
+  const user = await daf.user.findByEmail(email, c)
 
   if (!user) {
-    return c.json({ message: 'Email ou senha inválidos.' }, 401)
+    return c.json({ message: t('invalid-email-or-password')}, 401)
   }
 
-  const isValidPassword = await verifyPassword(password, user.password_hash)
+  const isValidPassword = await verifyPassword(password, user.passwordHash)
 
   if (!isValidPassword) {
-    return c.json({ message: 'Email ou senha inválidos.' }, 401)
+    return c.json({ message: t('invalid-email-or-password') }, 401)
   }
 
   const accessToken = await createAccessToken({

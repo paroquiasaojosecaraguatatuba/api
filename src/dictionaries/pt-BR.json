@@ -1,0 +1,11 @@
+{
+  "error-database-connection": "Erro ao conectar ao banco de dados.",
+  "error-email-already-exists": "Este email já está em uso.",
+  "error-internal-server": "Ocorreu um erro no servidor. Por favor, tente novamente mais tarde.",
+  "error-validation": "Os dados enviados são inválidos.",
+  "invalid-email": "Email inválido.",
+  "invalid-email-or-password": "Email ou senha inválidos.",
+  "invalid-password": "A senha deve ter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.",
+  "invalid-role": "Função inválida.",
+  "required-field": "Este campo é obrigatório."
+}

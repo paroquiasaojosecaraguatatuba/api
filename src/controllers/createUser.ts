@@ -1,29 +1,27 @@
-import { hashPassword, ulid } from "serverless-crypto-utils";
-
-type Input = {
-  email: string;
-  password: string;
-  role: 'admin' | 'user' | 'viewer';
-}
+import { useUserSchema } from "@/schemas/useUserSchema";
+import { getAppContext } from "@/utils/getAppContext";
+import { hashPassword } from "serverless-crypto-utils";
 
 export const createUser: ControllerFunction = async (c) => {
-  const {email, password, role} = c.env.data as Input;
+  const {daf, t, inputs} = getAppContext(c)
 
-  const existingUser = await c.env.DB
-    .prepare('SELECT id FROM users WHERE email = ?')
-    .bind(email)
-    .first<{ id: string }>();
+  const userSchema = useUserSchema(t)
+
+  const {email, password, role} = userSchema.parse(inputs)
+
+  const existingUser = await daf.user.exists({ email }, c);
 
   if (existingUser) {
-    return c.json({ message: 'Email já está em uso.' }, 400);
+    return c.json({ message: t('error-email-already-exists') }, 400);
   }
 
   const hashedPassword = await hashPassword(password);
 
-  await c.env.DB
-    .prepare('INSERT INTO users (id, email, password_hash, role) VALUES (?, ?, ?, ?)')
-    .bind(ulid(), email, hashedPassword, role)
-    .run();
+  const user = await daf.user.create({
+    email,
+    passwordHash: hashedPassword,
+    role
+  }, c)
 
-  return c.json({ message: 'Usuário criado com sucesso!' });
+  return c.json({ user });
 }

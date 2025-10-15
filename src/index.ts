@@ -5,13 +5,17 @@ import { parseJSON } from './middlewares/parseJSON'
 import { createUser } from './controllers/createUser'
 import { onAppError } from './middlewares/onAppError'
 import { ensureAdminAuth } from './middlewares/ensureAdminAuth'
+import { parseLanguage } from './middlewares/parseLanguage'
+import { withD1Database } from './middlewares/withD1Database'
 
-const app = new Hono<{Bindings: Bindings}>()
+const app = new Hono<{Bindings: Bindings; Variables: Variables}>()
 
 app.get('/health-check', healthCheck)
 
-app.post('/user', parseJSON, ensureAdminAuth, createUser)
-app.post('/login', parseJSON, login)
+app.use(parseJSON, parseLanguage, withD1Database)
+
+app.post('/login',login)
+app.post('/user', ensureAdminAuth, createUser)
 
 app.onError(onAppError)
 
