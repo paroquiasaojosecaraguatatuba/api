@@ -5,9 +5,9 @@ import { hashPassword } from "serverless-crypto-utils";
 export const createUser: ControllerFunction = async (c) => {
   const {daf, t, inputs} = getAppContext(c)
 
-  const userSchema = useUserSchema(t)
+  const validationSchema = useUserSchema(t)
 
-  const {email, password, role} = userSchema.parse(inputs)
+  const {email, password, role} = validationSchema.parse(inputs)
 
   const existingUser = await daf.user.exists({ email }, c);
 

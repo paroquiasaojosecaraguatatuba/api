@@ -5,9 +5,9 @@ import { verifyPassword, createAccessToken } from "serverless-crypto-utils";
 export const login: ControllerFunction = async (c) => {
   const {daf, inputs, t} = getAppContext(c)
 
-  const loginSchema = useLoginSchema(t)
+  const validationSchema = useLoginSchema(t)
 
-  const {email, password} = loginSchema.parse(inputs)
+  const {email, password} = validationSchema.parse(inputs)
 
   const user = await daf.user.findByEmail(email, c)
 
