@@ -1,4 +1,4 @@
-export interface IPasswordRecoveryDAF {
+export interface PasswordRecoveryDAF {
   findByUserId(userId: string, c: DomainContext): Promise<{
     id: string;
     userId: string;

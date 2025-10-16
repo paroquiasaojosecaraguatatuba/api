@@ -1,20 +1,24 @@
-import { ulid } from "serverless-crypto-utils/id-generation";
-import { IUserDAF } from "../../contracts/IUserDAF";
-import { DatabaseError } from "@/errors/DatabaseError";
+import { ulid } from 'serverless-crypto-utils/id-generation';
+import { UserDAF } from '../../contracts/UserDAF';
+import { DatabaseError } from '@/errors/DatabaseError';
 
-export const userDAF: IUserDAF = {
-  exists: async ({ email }, c: DomainContext): Promise<boolean> => {
-    const existingUser = await c.env.DB
-      .prepare('SELECT id FROM users WHERE email = ?')
-      .bind(email)
-      .first<{ id: string; }>();
+export class D1UserDAF implements UserDAF {
+  private client: D1Database;
 
-    return Boolean(existingUser);
-  },
+  constructor(client: D1Database) {
+    this.client = client;
+  }
 
-  findByEmail: async (email: string, c: DomainContext) => {
-    const user = await c.env.DB
-      .prepare('SELECT id, email, password_hash, role FROM users WHERE email = ?')
+  async findByEmail(email: string): Promise<{
+    id: string;
+    email: string;
+    passwordHash: string;
+    role: string;
+  } | null> {
+    const user = await this.client
+      .prepare(
+        'SELECT id, email, password_hash, role FROM users WHERE email = ?',
+      )
       .bind(email)
       .first<{
         id: string;
@@ -31,19 +35,34 @@ export const userDAF: IUserDAF = {
       id: user.id,
       email: user.email,
       passwordHash: user.password_hash,
-      role: user.role
+      role: user.role,
     };
-  },
+  }
 
-  create: async ({email, passwordHash, role}, c: DomainContext) => {
+  async create({
+    email,
+    passwordHash,
+    role,
+  }: {
+    email: string;
+    passwordHash: string;
+    role: 'admin' | 'user' | 'viewer';
+  }): Promise<{
+    id: string;
+    email: string;
+    passwordHash: string;
+    role: string;
+  }> {
     const userId = ulid();
-    
-    const result = await c.env.DB
-      .prepare(`
+
+    const result = await this.client
+      .prepare(
+        `
         INSERT INTO users (id, email, password_hash, role) 
         VALUES (?, ?, ?, ?) 
         RETURNING id, email, password_hash, role
-      `)
+      `,
+      )
       .bind(userId, email, passwordHash, role)
       .first<{
         id: string;
@@ -53,14 +72,39 @@ export const userDAF: IUserDAF = {
       }>();
 
     if (!result) {
-      throw new DatabaseError('Failed to create user', { values: {email, passwordHash, role}});
+      throw new DatabaseError('Failed to create user', {
+        values: { email, passwordHash, role },
+      });
     }
 
     return {
       id: result.id,
       email: result.email,
       passwordHash: result.password_hash,
-      role: result.role
+      role: result.role,
     };
   }
 }
+
+export const userDAF: UserDAF = {
+  findByEmail: function (email: string): Promise<{
+    id: string;
+    email: string;
+    passwordHash: string;
+    role: string;
+  } | null> {
+    throw new Error('Function not implemented.');
+  },
+  create: function (user: {
+    email: string;
+    passwordHash: string;
+    role: 'admin' | 'user' | 'viewer';
+  }): Promise<{
+    id: string;
+    email: string;
+    passwordHash: string;
+    role: string;
+  }> {
+    throw new Error('Function not implemented.');
+  },
+};

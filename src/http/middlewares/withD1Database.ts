@@ -1,10 +1,9 @@
-import type { Next } from "hono";
-import { log } from "../services/log";
-import { getDAF } from "../services/database";
-import { getAppContext } from "@/utils/getAppContext";
+import { getAppContext } from '@/http/utils/getAppContext';
+import { log } from '@/services/log';
+import { getDAF } from '@/services/database';
 
-export const withD1Database = async (c: DomainContext, next: Next) => {
-  const {t} = getAppContext(c)
+export const withD1Database: MiddlewareFn = async (c, next) => {
+  const { t } = getAppContext(c);
 
   if (!c.env.DB) {
     c.executionCtx.waitUntil(
@@ -13,21 +12,21 @@ export const withD1Database = async (c: DomainContext, next: Next) => {
         data: {
           endpoint: c.req.url,
           method: c.req.method,
-          error_type: "D1_BINDING_NOT_FOUND",
+          error_type: 'D1_BINDING_NOT_FOUND',
         },
         error: {
-          description: "D1 database binding not found in environment",
+          description: 'D1 database binding not found in environment',
         },
-      })
+      }),
     );
 
-    return c.json({ error: t("error-database-connection") }, 500);
+    return c.json({ error: t('error-database-connection') }, 500);
   }
 
   // 2) D1 suporta transações via batch() - rollback automático se alguma query falhar
   // Simplesmente disponibiliza o DAF no contexto
   try {
-    c.set("daf", getDAF());
+    c.set('daf', getDAF());
 
     await next();
   } catch (err) {

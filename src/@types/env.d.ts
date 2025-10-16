@@ -1,27 +1,30 @@
-import type { Context, TypedResponse, Next } from "hono";
-import {TranslatorFn} from "@/dictionaries";
-import {IDAF} from '@/services/database'
+import type { Context, TypedResponse, Next } from 'hono';
+import { TranslatorFn } from '@/dictionaries';
+import { IDAF } from '@/services/database';
 
 declare global {
   type DomainContext = Context<{ Bindings: Bindings; Variables: Variables }>;
-  type ControllerFunction = (c: DomainContext) => Promise<TypedResponse>;
-  type MiddlewareFunction = (c: DomainContext, next: Next) => Promise<void | TypedResponse>;
+  type ControllerFn = (c: DomainContext) => Promise<TypedResponse>;
+  type MiddlewareFn = (
+    c: DomainContext,
+    next: Next,
+  ) => Promise<void | TypedResponse>;
 
   type Variables = {
-    dictionary: TranslatorFn
+    dictionary: TranslatorFn;
     daf: IDAF;
     user: {
       id: string;
       email: string;
       role: string;
-    }
-    timezone: string
-    timezoneOffset: string
+    };
+    timezone: string;
+    timezoneOffset: string;
     inputs: any;
   };
 
   type Env = {
-    ENVIRONMENT: "development" | "production";
+    ENVIRONMENT: 'development' | 'production';
     ENCRYPTION_SECRET: string;
     SIGNING_SECRET: string;
 

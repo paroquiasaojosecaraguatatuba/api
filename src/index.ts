@@ -1,22 +1,19 @@
-import { Hono } from 'hono'
-import { healthCheck } from './controllers/health-check'
-import { login } from './controllers/login'
-import { parseJSON } from './middlewares/parseJSON'
-import { createUser } from './controllers/create-user'
-import { onAppError } from './middlewares/onAppError'
-import { ensureAdminAuth } from './middlewares/ensureAdminAuth'
-import { parseLanguage } from './middlewares/parseLanguage'
-import { withD1Database } from './middlewares/withD1Database'
+import { Hono } from 'hono';
+import { healthCheck } from './http/controllers/health-check';
+import { parseJSON } from './http/middlewares/parseJSON';
+import { withDictionary } from './http/middlewares/withDictionary';
+import { withD1Database } from './http/middlewares/withD1Database';
+import { onAppError } from './http/middlewares/onAppError';
+import { userRoutes } from './http/controllers/users/routes';
 
-const app = new Hono<{Bindings: Bindings; Variables: Variables}>()
+const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-app.get('/health-check', healthCheck)
+app.get('/health-check', healthCheck);
 
-app.use(parseJSON, parseLanguage, withD1Database)
+app.use(withDictionary, parseJSON, withD1Database);
 
-app.post('/login',login)
-app.post('/user', ensureAdminAuth, createUser)
+app.route('/', userRoutes);
 
-app.onError(onAppError)
+app.onError(onAppError);
 
-export default app
+export default app;

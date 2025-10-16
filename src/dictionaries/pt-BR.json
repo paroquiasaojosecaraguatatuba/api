@@ -8,6 +8,11 @@
   "invalid-email-or-password": "Email ou senha inválidos.",
   "invalid-password": "A senha deve ter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.",
   "invalid-role": "Função inválida.",
+  "invalid-token-or-expired": "Token inválido ou expirado.",
+  "invalid-refresh-token-or-expired": "Token de atualização inválido ou expirado.",
   "required-field": "Este campo é obrigatório.",
-  "resource-not-found": "Recurso não encontrado."
+  "required-token": "Token é obrigatório.",
+  "required-refresh-token": "Token de atualização é obrigatório.",
+  "resource-not-found": "Recurso não encontrado.",
+  "unauthorized": "Não autorizado."
 }

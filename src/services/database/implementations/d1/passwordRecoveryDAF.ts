@@ -1,9 +1,10 @@
-import { IPasswordRecoveryDAF } from "../../contracts/IPasswordRecoveryDAF";
+import { PasswordRecoveryDAF } from '../../contracts/PasswordRecoveryDAF';
 
-export const passwordRecoveryDAF:IPasswordRecoveryDAF = {
+export const passwordRecoveryDAF: PasswordRecoveryDAF = {
   findByUserId: async (userId: string, c: DomainContext) => {
-    const passwordRecovery = await c.env.DB
-      .prepare('SELECT id, user_id, code, created_at FROM password_recoveries WHERE user_id = ?')
+    const passwordRecovery = await c.env.DB.prepare(
+      'SELECT id, user_id, code, created_at FROM password_recoveries WHERE user_id = ?',
+    )
       .bind(userId)
       .first<{
         id: string;
@@ -20,7 +21,7 @@ export const passwordRecoveryDAF:IPasswordRecoveryDAF = {
       id: passwordRecovery.id,
       userId: passwordRecovery.user_id,
       code: passwordRecovery.code,
-      createdAt: passwordRecovery.created_at
+      createdAt: passwordRecovery.created_at,
     };
-  }
-}
+  },
+};

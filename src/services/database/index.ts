@@ -1,12 +1,12 @@
-import { IPasswordRecoveryDAF } from "./contracts/IPasswordRecoveryDAF";
-import { IUserDAF } from "./contracts/IUserDAF";
+import { PasswordRecoveryDAF } from "./contracts/PasswordRecoveryDAF";
+import { UserDAF } from "./contracts/UserDAF";
 import { d1DAF } from "./implementations/d1";
 
-export interface IDAF {
-  passwordRecovery: IPasswordRecoveryDAF
-  user: IUserDAF
+export interface DAF {
+  passwordRecovery: PasswordRecoveryDAF
+  user: UserDAF
 }
 
-export const getDAF = (): IDAF => {
+export const getDAF = () => {
  return d1DAF
 }

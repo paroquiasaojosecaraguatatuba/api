@@ -7,7 +7,9 @@
     "dev": "wrangler dev --local",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "migration:dev": "npx wrangler d1 execute parish_db_dev --local --file"
+    "migration:dev": "npx wrangler d1 execute parish_db_dev --local --file",
+    "lint": "eslint . --ext .ts --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20250927.0",
@@ -16,6 +18,10 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.37.0",
+    "prettier": "^3.6.2",
     "wrangler": "^4.4.0"
   }
 }

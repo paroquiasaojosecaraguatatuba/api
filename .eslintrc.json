@@ -1,0 +1,13 @@
+{
+  "extends": ["@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "env": {
+    "es2022": true,
+    "worker": true
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error"
+  },
+  "ignorePatterns": ["dist/", ".wrangler/"]
+}

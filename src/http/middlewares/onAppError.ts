@@ -1,14 +1,14 @@
-import type { HTTPResponseError } from "hono/types";
-import z, { ZodError } from "zod";
-import { log } from "../services/log";
-import { getAppContext } from "@/utils/getAppContext";
-import { DatabaseError } from "@/errors/DatabaseError";
+import type { HTTPResponseError } from 'hono/types';
+import z, { ZodError } from 'zod';
+import { getAppContext } from '@/http/utils/getAppContext';
+import { DatabaseError } from '@/errors/DatabaseError';
+import { log } from '@/services/log';
 
 export const onAppError = async (
   error: Error | HTTPResponseError,
-  c: DomainContext
+  c: DomainContext,
 ) => {
-  const {t, inputs} = getAppContext(c)
+  const { t, inputs } = getAppContext(c);
 
   if (error instanceof ZodError) {
     return c.json(
@@ -17,9 +17,9 @@ export const onAppError = async (
         errors: error.issues.map((err: z.core.$ZodIssue) => ({
           field: err.path.join('.'),
           message: err.message,
-        }))
+        })),
       },
-      400
+      400,
     );
   }
 
@@ -30,17 +30,17 @@ export const onAppError = async (
         data: {
           endpoint: c.req.url,
           method: c.req.method,
-          inputs
+          inputs,
         },
         error,
-      })
+      }),
     );
 
     return c.json(
       {
-        message: t('error-internal-server')
+        message: t('error-internal-server'),
       },
-      500
+      500,
     );
   }
 
@@ -50,16 +50,16 @@ export const onAppError = async (
       data: {
         endpoint: c.req.url,
         method: c.req.method,
-        inputs
+        inputs,
       },
       error,
-    })
+    }),
   );
 
   return c.json(
     {
-      message: t('error-internal-server')
+      message: t('error-internal-server'),
     },
-    500
+    500,
   );
 };
