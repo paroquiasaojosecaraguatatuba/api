@@ -1,4 +1,4 @@
-export interface UserDAF {
+export interface UsersDAF {
   findByEmail(email: string): Promise<{
     id: string;
     email: string;

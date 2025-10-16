@@ -1,4 +1,4 @@
-import { UserDAF } from '@/services/database/contracts/UserDAF';
+import { UserDAF } from '@/services/database/users-daf';
 import { InvalidCredentialsError } from './errors/invalid-credentials-error';
 import { verifyPassword } from 'serverless-crypto-utils/password-hashing';
 

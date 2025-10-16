@@ -1,8 +1,8 @@
 import { ulid } from 'serverless-crypto-utils/id-generation';
-import { UserDAF } from '../../contracts/UserDAF';
 import { DatabaseError } from '@/errors/DatabaseError';
+import { UsersDAF } from '../users-daf';
 
-export class D1UserDAF implements UserDAF {
+export class D1UserDAF implements UsersDAF {
   private client: D1Database;
 
   constructor(client: D1Database) {
@@ -85,26 +85,3 @@ export class D1UserDAF implements UserDAF {
     };
   }
 }
-
-export const userDAF: UserDAF = {
-  findByEmail: function (email: string): Promise<{
-    id: string;
-    email: string;
-    passwordHash: string;
-    role: string;
-  } | null> {
-    throw new Error('Function not implemented.');
-  },
-  create: function (user: {
-    email: string;
-    passwordHash: string;
-    role: 'admin' | 'user' | 'viewer';
-  }): Promise<{
-    id: string;
-    email: string;
-    passwordHash: string;
-    role: string;
-  }> {
-    throw new Error('Function not implemented.');
-  },
-};

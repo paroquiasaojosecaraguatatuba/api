@@ -1,4 +1,4 @@
-import { PasswordRecoveryDAF } from '../../contracts/PasswordRecoveryDAF';
+import { PasswordRecoveryDAF } from '../password-recovery-daf';
 
 export const passwordRecoveryDAF: PasswordRecoveryDAF = {
   findByUserId: async (userId: string, c: DomainContext) => {

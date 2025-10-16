@@ -8,7 +8,7 @@ declare global {
   type MiddlewareFn = (
     c: DomainContext,
     next: Next,
-  ) => Promise<void | TypedResponse>;
+  ) => Promise<void | Response>;
 
   type Variables = {
     dictionary: TranslatorFn;

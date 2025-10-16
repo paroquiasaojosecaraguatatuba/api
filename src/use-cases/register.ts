@@ -1,4 +1,4 @@
-import { UserDAF } from '@/services/database/contracts/UserDAF';
+import { UserDAF } from '@/services/database/users-daf';
 import { UserAlreadyExistsError } from './errors/user-already-exists-error';
 import { hashPassword } from 'serverless-crypto-utils/password-hashing';
 
