@@ -1,4 +1,4 @@
-import { UserDAF } from '@/services/database/users-daf';
+import { UsersDAF } from '@/services/database/users-daf';
 import { InvalidCredentialsError } from './errors/invalid-credentials-error';
 import { verifyPassword } from 'serverless-crypto-utils/password-hashing';
 
@@ -17,13 +17,13 @@ interface AuthenticateUseCaseResponse {
 }
 
 export class AuthenticateUseCase {
-  constructor(private userDaf: UserDAF) {}
+  constructor(private usersDaf: UsersDAF) {}
 
   async execute({
     email,
     password,
   }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
-    const user = await this.userDaf.findByEmail(email);
+    const user = await this.usersDaf.findByEmail(email);
 
     if (!user) {
       throw new InvalidCredentialsError();

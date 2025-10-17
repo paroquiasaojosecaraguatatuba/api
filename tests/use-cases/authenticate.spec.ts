@@ -1,56 +1,54 @@
 import { describe, beforeEach, it, expect } from 'vitest';
-import { RegisterUseCase } from '@/use-cases/register';
-import { makeRegisterUseCase } from '../factories/makeRegisterUseCase';
-import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
-import { verifyPassword } from 'serverless-crypto-utils';
+import { hashPassword } from 'serverless-crypto-utils/password-hashing';
+import { AuthenticateUseCase } from '@/use-cases/authenticate';
+import { InMemoryUserDAF } from '../database/in-memory-users-daf';
+import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error';
 
-let sut: RegisterUseCase;
+let usersDaf: InMemoryUserDAF;
+let sut: AuthenticateUseCase;
 
-describe('Register Use Case', () => {
+describe('Authenticate Use Case', () => {
   beforeEach(() => {
-    sut = makeRegisterUseCase();
+    usersDaf = new InMemoryUserDAF();
+    sut = new AuthenticateUseCase(usersDaf);
   });
 
-  it('should be able to register', async () => {
+  it('should be able to authenticate', async () => {
+    await usersDaf.create({
+      email: 'janedoe@example.com',
+      passwordHash: await hashPassword('123@Mudar'),
+      role: 'user',
+    });
+
     const { user } = await sut.execute({
       email: 'janedoe@example.com',
       password: '123@Mudar',
-      role: 'user',
     });
 
     expect(user.id).toBeDefined();
   });
 
-  it('should hash user password upon registration', async () => {
-    const { user } = await sut.execute({
-      email: 'janedoe@example.com',
-      password: '123@Mudar',
-      role: 'user',
-    });
-
-    const isPasswordCorrectlyHashed = await verifyPassword(
-      '123@Mudar',
-      user.passwordHash,
-    );
-
-    expect(isPasswordCorrectlyHashed).toBe(true);
+  it('should not be able authenticate with wrong email', async () => {
+    await expect(() =>
+      sut.execute({
+        email: 'janedoe@example.com',
+        password: '123@Mudar',
+      }),
+    ).rejects.toBeInstanceOf(InvalidCredentialsError);
   });
 
-  it('should not be able to register with same email twice', async () => {
-    const email = 'janedoe@example.com';
-
-    await sut.execute({
-      email,
-      password: '456@Mudar',
+  it('should not be able to authenticate with wrong password', async () => {
+    await usersDaf.create({
+      email: 'janedoe@example.com',
+      passwordHash: await hashPassword('123@Mudar'),
       role: 'user',
     });
 
     await expect(() =>
       sut.execute({
-        email,
-        password: '456@Mudar',
-        role: 'user',
+        email: 'janedoe@example.com',
+        password: '123@Mudar4',
       }),
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
+    ).rejects.toBeInstanceOf(InvalidCredentialsError);
   });
 });
