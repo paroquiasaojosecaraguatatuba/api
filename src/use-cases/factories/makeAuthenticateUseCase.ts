@@ -1,4 +1,4 @@
-import { D1UserDAF } from '@/services/database/d1/users-daf';
+import { D1UserDAF } from '@/services/database/d1/d1-users-daf';
 import { AuthenticateUseCase } from '../authenticate';
 
 export function makeAuthenticateUseCase(c: DomainContext) {

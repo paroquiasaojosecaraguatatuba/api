@@ -1,21 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "api",
+  "name": "parish-api",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-27",
   "account_id": "309e86d52409580e543ecf949c110d4d",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
+  "compatibility_flags": ["nodejs_compat"],
   "vars": {
-    "ENVIRONMENT": "development"
+    "ENVIRONMENT": "development",
   },
   "workers_dev": true,
   "dev": {
     "ip": "localhost",
     "port": 3333,
     "local_protocol": "https",
-    "upstream_protocol": "https"
+    "upstream_protocol": "https",
   },
   // "kv_namespaces": [
   //   {
@@ -23,18 +21,18 @@
   //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   //   }
   // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "MY_BUCKET",
-  //     "bucket_name": "my-bucket"
-  //   }
-  // ],
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "parish-attachments-dev",
+    },
+  ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "parish_db_dev",
-      "database_id": "DUMMY_ID_FOR_LOCAL_DEV"
-    }
+      "database_id": "DUMMY_ID_FOR_LOCAL_DEV",
+    },
   ],
   // "ai": {
   //   "binding": "AI"

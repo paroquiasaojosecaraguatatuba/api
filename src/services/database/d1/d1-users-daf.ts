@@ -3,19 +3,14 @@ import { DatabaseError } from '@/errors/DatabaseError';
 import { UsersDAF } from '../users-daf';
 
 export class D1UserDAF implements UsersDAF {
-  private client: D1Database;
+  private d1: D1Database;
 
-  constructor(client: D1Database) {
-    this.client = client;
+  constructor(d1: D1Database) {
+    this.d1 = d1;
   }
 
-  async findByEmail(email: string): Promise<{
-    id: string;
-    email: string;
-    passwordHash: string;
-    role: string;
-  } | null> {
-    const user = await this.client
+  async findByEmail(email: string) {
+    const user = await this.d1
       .prepare(
         'SELECT id, email, password_hash, role FROM users WHERE email = ?',
       )
@@ -47,15 +42,10 @@ export class D1UserDAF implements UsersDAF {
     email: string;
     passwordHash: string;
     role: 'admin' | 'user' | 'viewer';
-  }): Promise<{
-    id: string;
-    email: string;
-    passwordHash: string;
-    role: string;
-  }> {
+  }) {
     const userId = ulid();
 
-    const result = await this.client
+    const result = await this.d1
       .prepare(
         `
         INSERT INTO users (id, email, password_hash, role) 

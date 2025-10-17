@@ -1,4 +1,4 @@
-import { D1UserDAF } from '@/services/database/d1/users-daf';
+import { D1UserDAF } from '@/services/database/d1/d1-users-daf';
 import { RegisterUseCase } from '../register';
 
 export function makeRegisterUseCase(c: DomainContext) {

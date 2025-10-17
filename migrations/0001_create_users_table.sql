@@ -1,6 +1,3 @@
--- Data: 27/09/2025
--- Autor: Giselle Hoekveld Silva
-
 CREATE TABLE IF NOT EXISTS users (
   id VARCHAR(36) PRIMARY KEY NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
@@ -12,22 +9,39 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
+CREATE TABLE IF NOT EXISTS attachments (
+  id VARCHAR(36) PRIMARY KEY NOT NULL,
+  filename VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'attached')),
+  uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  uploaded_by VARCHAR(36),
+
+  FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS communities (
+  id VARCHAR(36) PRIMARY KEY NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(20) NOT NULL CHECK (type IN ('chapel', 'parish_church')),
+  address TEXT NOT NULL,
+  cover_id VARCHAR(36), -- ✅ SUA IDEIA ESTÁ CORRETA!
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+
+  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL -- ✅ Corrigido também
+);
+
+CREATE INDEX IF NOT EXISTS idx_communities_name ON communities(name);
+
 CREATE TABLE IF NOT EXISTS migrations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
+  author VARCHAR(100) NOT NULL,
   applied_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS password_recoveries (
-  id VARCHAR(36) PRIMARY KEY NOT NULL,
-  code CHAR(5) NOT NULL,
-  user_id VARCHAR(36) NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
-INSERT INTO migrations (id, name, description) 
-VALUES (1, '0001_initial_migration', 'Run initial migration to create users and migrations tables')
+INSERT INTO migrations (id, name, description, author) 
+VALUES (1, '0001_initial_migration', 'Run initial migration to create users and migrations tables', 'Giselle Hoekveld Silva')
 ON CONFLICT(id) DO NOTHING;
