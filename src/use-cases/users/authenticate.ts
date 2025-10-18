@@ -1,5 +1,6 @@
-import { UsersDAF } from '@/services/database/users-daf';
-import { InvalidCredentialsError } from './errors/invalid-credentials-error';
+import type { UsersDAF } from '@/services/database/users-daf';
+import type { User } from '@/entities/user';
+import { InvalidCredentialsError } from '../errors/invalid-credentials-error';
 import { verifyPassword } from 'serverless-crypto-utils/password-hashing';
 
 interface AuthenticateUseCaseRequest {
@@ -8,12 +9,7 @@ interface AuthenticateUseCaseRequest {
 }
 
 interface AuthenticateUseCaseResponse {
-  user: {
-    id: string;
-    email: string;
-    passwordHash: string;
-    role: string;
-  };
+  user: User;
 }
 
 export class AuthenticateUseCase {

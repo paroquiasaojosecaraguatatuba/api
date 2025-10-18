@@ -1,5 +1,5 @@
 import { D1UserDAF } from '@/services/database/d1/d1-users-daf';
-import { AuthenticateUseCase } from '../authenticate';
+import { AuthenticateUseCase } from '../users/authenticate';
 
 export function makeAuthenticateUseCase(c: DomainContext) {
   const userDaf = new D1UserDAF(c.env.DB);

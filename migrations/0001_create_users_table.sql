@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-  id VARCHAR(36) PRIMARY KEY NOT NULL,
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   role VARCHAR(20) NOT NULL DEFAULT 'viewer', -- roles: admin, editor, viewer
@@ -10,10 +10,10 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
 CREATE TABLE IF NOT EXISTS attachments (
-  id VARCHAR(36) PRIMARY KEY NOT NULL,
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
   filename VARCHAR(255) NOT NULL,
   mime_type VARCHAR(100) NOT NULL,
-  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'attached')),
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'attached', 'deleted')),
   uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   uploaded_by VARCHAR(36),
 
@@ -21,15 +21,16 @@ CREATE TABLE IF NOT EXISTS attachments (
 );
 
 CREATE TABLE IF NOT EXISTS communities (
-  id VARCHAR(36) PRIMARY KEY NOT NULL,
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
   name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
   type VARCHAR(20) NOT NULL CHECK (type IN ('chapel', 'parish_church')),
   address TEXT NOT NULL,
-  cover_id VARCHAR(36), -- ✅ SUA IDEIA ESTÁ CORRETA!
+  cover_id VARCHAR(26),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
-  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL -- ✅ Corrigido também
+  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communities_name ON communities(name);

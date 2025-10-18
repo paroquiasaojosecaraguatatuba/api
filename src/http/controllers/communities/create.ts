@@ -1,0 +1,41 @@
+import { getAppContext } from '@/http/utils/getAppContext';
+import { makeCreateCommunityUseCase } from '@/use-cases/factories/makeCreateCommunityUseCase';
+import { useCommunitySchema } from '@/schemas/useCommunitySchema';
+import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found-error';
+import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
+import { ParishAlreadyExistsError } from '@/use-cases/errors/parish-already-exists-error';
+
+export const createCommunity: ControllerFn = async (c) => {
+  const { t, inputs } = getAppContext(c);
+
+  const validationSchema = useCommunitySchema(t);
+
+  const { name, type, address, coverId } = validationSchema.parse(inputs);
+
+  try {
+    const createUseCase = makeCreateCommunityUseCase(c);
+
+    const { community } = await createUseCase.execute({
+      name,
+      type,
+      address,
+      coverId,
+    });
+
+    return c.json({ community });
+  } catch (err) {
+    if (err instanceof ResourceAlreadyExistsError) {
+      return c.json({ message: t('error-name-already-in-use') }, 400);
+    }
+
+    if (err instanceof ParishAlreadyExistsError) {
+      return c.json({ message: t('error-parish-already-exists') }, 400);
+    }
+
+    if (err instanceof AttachmentNotFoundError) {
+      return c.json({ message: t('error-cover-not-uploaded-yet') }, 400);
+    }
+
+    throw err;
+  }
+};

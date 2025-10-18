@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from 'vitest';
-import { RegisterUseCase } from '@/use-cases/register';
-import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
+import { RegisterUseCase } from '@/use-cases/users/register';
+import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 import { verifyPassword } from 'serverless-crypto-utils';
 import { InMemoryUserDAF } from '../database/in-memory-users-daf';
 
@@ -53,6 +53,6 @@ describe('Register Use Case', () => {
         password: '456@Mudar',
         role: 'user',
       }),
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
+    ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });
 });

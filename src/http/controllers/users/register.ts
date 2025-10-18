@@ -1,7 +1,7 @@
 import { useUserSchema } from '@/schemas/useUserSchema';
 import { getAppContext } from '@/http/utils/getAppContext';
 import { makeRegisterUseCase } from '@/use-cases/factories/makeRegisterUseCase';
-import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
+import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 
 export const register: ControllerFn = async (c) => {
   const { t, inputs } = getAppContext(c);
@@ -17,7 +17,7 @@ export const register: ControllerFn = async (c) => {
 
     return c.json({ user });
   } catch (err) {
-    if (err instanceof UserAlreadyExistsError) {
+    if (err instanceof ResourceAlreadyExistsError) {
       return c.json({ message: t('error-email-already-exists') }, 409);
     }
 

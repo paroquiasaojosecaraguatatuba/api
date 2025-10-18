@@ -1,5 +1,5 @@
-import { User } from '@/entities/user';
-import { UsersDAF } from '@/services/database/users-daf';
+import type { User } from '@/entities/user';
+import type { UsersDAF } from '@/services/database/users-daf';
 
 export class InMemoryUserDAF implements UsersDAF {
   public users: User[] = [];
@@ -23,12 +23,12 @@ export class InMemoryUserDAF implements UsersDAF {
     passwordHash: string;
     role: 'admin' | 'user' | 'viewer';
   }) {
-    const newUser = new User({
+    const newUser = {
       id: (this.users.length + 1).toString(),
       email,
       passwordHash,
       role,
-    });
+    };
 
     this.users.push(newUser);
 

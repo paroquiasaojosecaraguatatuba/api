@@ -11,13 +11,11 @@ export const parseBody: MiddlewareFn = async (c, next) => {
         c.set('inputs', body);
       }
 
-      if (contentType?.includes('application/x-www-form-urlencoded')) {
+      if (contentType?.includes('multipart/form-data')) {
         const formData = await c.req.formData();
         const body: Record<string, string> = {};
         formData.forEach((value, key) => {
-          if (typeof value === 'string') {
-            body[key] = value;
-          }
+          body[key] = value;
         });
         c.set('inputs', body);
       }

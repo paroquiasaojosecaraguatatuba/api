@@ -1,5 +1,6 @@
-import { UsersDAF } from '@/services/database/users-daf';
-import { UserAlreadyExistsError } from './errors/user-already-exists-error';
+import type { UsersDAF } from '@/services/database/users-daf';
+import type { User } from '@/entities/user';
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists-error';
 import { hashPassword } from 'serverless-crypto-utils/password-hashing';
 
 interface RegisterUseCaseRequest {
@@ -9,12 +10,7 @@ interface RegisterUseCaseRequest {
 }
 
 interface RegisterUseCaseResponse {
-  user: {
-    id: string;
-    email: string;
-    passwordHash: string;
-    role: string;
-  };
+  user: User;
 }
 
 export class RegisterUseCase {
@@ -28,7 +24,7 @@ export class RegisterUseCase {
     const userWithSameEmail = await this.usersDaf.findByEmail(email);
 
     if (userWithSameEmail) {
-      throw new UserAlreadyExistsError();
+      throw new ResourceAlreadyExistsError();
     }
 
     const passwordHash = await hashPassword(password);

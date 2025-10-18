@@ -11,7 +11,7 @@ export const verifyToken = async (
   const accessToken = c.req.header('Authorization')?.replace('Bearer ', '');
 
   if (!accessToken) {
-    return c.json({ error: t('required-token') }, 401);
+    return c.json({ error: t('invalid-token-or-expired') }, 401);
   }
 
   const result = await verifyAccessTokenSafe({
@@ -24,9 +24,9 @@ export const verifyToken = async (
     const data = JSON.parse(result.data);
     c.set('user', data.user);
     return await next();
-  } else {
-    console.error(`Error ${result.error.code}: ${result.error.message}`);
-
-    return c.json({ error: t('invalid-token-or-expired') }, 401);
   }
+
+  console.error(`Error ${result.error.code}: ${result.error.message}`);
+
+  return c.json({ error: t('invalid-token-or-expired') }, 401);
 };

@@ -11,6 +11,8 @@
 ### Regras de Negócio
 
 - [ ] Somente o administrador pode criar novos acessos;
+- [ ] Somente uma comunidade pode ser do tipo "paróquia";
+- [ ] O slug da comunidade deve ser único;
 
 ### Requisitos Não Funcionais
 

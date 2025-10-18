@@ -1,5 +1,5 @@
-import { ImagesDAM } from '@/services/dam/images-dam';
-import { AttachmentsDAF } from '@/services/database/attachments-daf';
+import type { ImagesDAM } from '@/services/dam/images-dam';
+import type { AttachmentsDAF } from '@/services/database/attachments-daf';
 import { ulid, uuidV4 } from 'serverless-crypto-utils/id-generation';
 
 interface UploadImageUseCaseRequest {

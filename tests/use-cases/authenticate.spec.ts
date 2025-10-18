@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { hashPassword } from 'serverless-crypto-utils/password-hashing';
-import { AuthenticateUseCase } from '@/use-cases/authenticate';
+import { AuthenticateUseCase } from '@/use-cases/users/authenticate';
 import { InMemoryUserDAF } from '../database/in-memory-users-daf';
 import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error';
 

@@ -1,6 +1,6 @@
 import { ulid } from 'serverless-crypto-utils/id-generation';
 import { DatabaseError } from '@/errors/DatabaseError';
-import { UsersDAF } from '../users-daf';
+import type { UsersDAF } from '../users-daf';
 
 export class D1UserDAF implements UsersDAF {
   private d1: D1Database;
@@ -19,7 +19,7 @@ export class D1UserDAF implements UsersDAF {
         id: string;
         email: string;
         password_hash: string;
-        role: string;
+        role: 'admin' | 'user' | 'viewer';
       }>();
 
     if (!user) {
@@ -45,7 +45,7 @@ export class D1UserDAF implements UsersDAF {
   }) {
     const userId = ulid();
 
-    const result = await this.d1
+    const user = await this.d1
       .prepare(
         `
         INSERT INTO users (id, email, password_hash, role) 
@@ -58,20 +58,20 @@ export class D1UserDAF implements UsersDAF {
         id: string;
         email: string;
         password_hash: string;
-        role: string;
+        role: 'admin' | 'user' | 'viewer';
       }>();
 
-    if (!result) {
+    if (!user) {
       throw new DatabaseError('Failed to create user', {
         values: { email, passwordHash, role },
       });
     }
 
     return {
-      id: result.id,
-      email: result.email,
-      passwordHash: result.password_hash,
-      role: result.role,
+      id: user.id,
+      email: user.email,
+      passwordHash: user.password_hash,
+      role: user.role,
     };
   }
 }
