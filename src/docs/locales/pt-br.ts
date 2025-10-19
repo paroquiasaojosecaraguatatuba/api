@@ -1,8 +1,10 @@
 import { attachmentPaths } from '../paths/attachments';
 import { communityPaths } from '../paths/communities';
+import { pastoralPaths } from '../paths/pastorals';
 import { userPaths } from '../paths/users';
 import { commonSchemas } from '../schemas/common';
 import { communitySchemas } from '../schemas/communities';
+import { pastoralSchemas } from '../schemas/pastorals';
 import { userSchemas } from '../schemas/users';
 
 export const openApiSpec = {
@@ -40,6 +42,7 @@ export const openApiSpec = {
       ...userSchemas,
       ...communitySchemas,
       ...commonSchemas,
+      ...pastoralSchemas,
     },
   },
   security: [
@@ -51,6 +54,7 @@ export const openApiSpec = {
     ...userPaths,
     ...attachmentPaths,
     ...communityPaths,
+    ...pastoralPaths,
   },
   tags: [
     {
@@ -65,6 +69,10 @@ export const openApiSpec = {
       name: 'Communities',
       description:
         'Operações relacionadas com comunidades religiosas (capelas e paróquias)',
+    },
+    {
+      name: 'Pastorals',
+      description: 'Operações relacionadas com pastorais da igreja',
     },
   ],
 };
