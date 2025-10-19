@@ -28,12 +28,6 @@ export const communitySchemas = {
         example: '01K7WHHBXWKXWYWE9ZCY88MG2Z',
         description: 'ID do anexo da imagem de capa',
       },
-      updatedAt: {
-        type: 'string',
-        format: 'date-time',
-        example: '2025-10-18T21:26:36.811Z',
-        description: 'Timestamp da última atualização',
-      },
     },
     required: ['id', 'name', 'type', 'address', 'coverId'],
   },
