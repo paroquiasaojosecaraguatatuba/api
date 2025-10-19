@@ -115,6 +115,35 @@ export class D1CommunitiesDAF implements CommunitiesDAF {
     };
   }
 
+  async findAll(): Promise<Community[]> {
+    const communities = await this.d1
+      .prepare(
+        `SELECT id, name, slug, type, address, cover_id, updated_at, created_at
+         FROM communities`,
+      )
+      .all<{
+        id: string;
+        name: string;
+        slug: string;
+        type: 'chapel' | 'parish_church';
+        address: string;
+        cover_id: string;
+        updated_at: string;
+        created_at: string;
+      }>();
+
+    return communities.results.map((community) => ({
+      id: community.id,
+      name: community.name,
+      slug: community.slug,
+      type: community.type,
+      address: community.address,
+      coverId: community.cover_id,
+      updatedAt: community?.updated_at,
+      createdAt: community.created_at,
+    }));
+  }
+
   async create({
     id,
     name,

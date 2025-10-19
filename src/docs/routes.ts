@@ -6,7 +6,7 @@ import { openApiSpec } from './openapi-spec';
 const app = new Hono().basePath('/docs');
 
 function getLocale(acceptLanguage = ''): string {
-  const supportedLocales = ['pt-BR', 'en'];
+  const supportedLocales = ['pt-BR'];
   const requestedLocales = acceptLanguage
     .split(',')
     .map((lang) => lang.split(';')[0].trim())
@@ -22,7 +22,7 @@ function getLocale(acceptLanguage = ''): string {
     }
   }
 
-  return 'en'; // Fallback
+  return 'pt-BR'; // Fallback
 }
 
 // ✅ Spec dinâmico baseado no idioma
@@ -61,7 +61,7 @@ app.get('/', (c, next) => {
 // ✅ UI específica por idioma
 app.get('/:locale', async (c, next) => {
   const { locale } = c.req.param();
-  const supportedLocales = ['pt-BR', 'en'];
+  const supportedLocales = ['pt-BR'];
 
   if (!supportedLocales.includes(locale)) {
     return c.redirect('/docs/');

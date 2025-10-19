@@ -412,6 +412,44 @@ export const openApiSpec = {
       },
     },
     '/communities': {
+      get: {
+        summary: 'Lista todas as comunidades',
+        description:
+          'Recupera uma lista de todas as comunidades religiosas registradas no sistema.',
+        tags: ['Communities'],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'Lista de comunidades recuperada com sucesso',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    communities: {
+                      type: 'array',
+                      items: {
+                        $ref: '#/components/schemas/Community',
+                      },
+                    },
+                  },
+                  required: ['communities'],
+                },
+              },
+            },
+          },
+          401: {
+            description: 'Autenticação necessária',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/UnauthorizedResponse',
+                },
+              },
+            },
+          },
+        },
+      },
       post: {
         summary: 'Cria nova comunidade',
         description:

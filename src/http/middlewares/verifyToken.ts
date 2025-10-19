@@ -26,7 +26,5 @@ export const verifyToken = async (
     return await next();
   }
 
-  console.error(`Error ${result.error.code}: ${result.error.message}`);
-
   return c.json({ error: t('invalid-token-or-expired') }, 401);
 };

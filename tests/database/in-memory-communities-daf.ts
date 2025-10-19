@@ -34,6 +34,10 @@ export class InMemoryCommunitiesDAF implements CommunitiesDAF {
     return community;
   }
 
+  async findAll(): Promise<Community[]> {
+    return this.communities;
+  }
+
   async create(community: {
     id: string;
     name: string;

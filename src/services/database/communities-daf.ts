@@ -4,6 +4,7 @@ export interface CommunitiesDAF {
   findById: (id: string) => Promise<Community | null>;
   findByName: (name: string) => Promise<Community | null>;
   findParish: () => Promise<Community | null>;
+  findAll: () => Promise<Community[]>;
   create(data: {
     id: string;
     name: string;
