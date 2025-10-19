@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS pastorals (
   responsible_name VARCHAR(255) NOT NULL,
   contact_phone VARCHAR(20) NOT NULL,
   cover_id VARCHAR(26) NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT 1,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
