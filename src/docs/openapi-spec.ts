@@ -1,4 +1,4 @@
-import ptBR from './pt-br';
+import ptBR from './locales/pt-br';
 
 export function openApiSpec(locale: string) {
   switch (locale) {

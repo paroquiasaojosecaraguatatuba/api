@@ -1,14 +1,16 @@
 import type { Context, TypedResponse, Next } from 'hono';
-import { TranslatorFn } from '@/dictionaries';
-import { IDAF } from '@/services/database';
+import type { TranslatorFn } from '@/dictionaries';
+import type { IDAF } from '@/services/database';
 
 declare global {
-  type DomainContext = Context<{ Bindings: Bindings; Variables: Variables }>;
+  type Env = { Bindings: Bindings; Variables: Variables };
+  type DomainContext = Context<Env>;
   type ControllerFn = (c: DomainContext) => Promise<TypedResponse>;
   type MiddlewareFn = (
     c: DomainContext,
     next: Next,
-  ) => Promise<void | Response>;
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+  ) => Promise<Response | void>;
 
   type Variables = {
     dictionary: TranslatorFn;
@@ -20,10 +22,12 @@ declare global {
     };
     timezone: string;
     timezoneOffset: string;
+    locale: string;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     inputs: any;
   };
 
-  type Env = {
+  type Bindings = {
     ENVIRONMENT: 'development' | 'production';
     ENCRYPTION_SECRET: string;
     SIGNING_SECRET: string;
@@ -39,9 +43,8 @@ declare global {
     // Site URLs
     PANEL_BASE_URL: string;
     SITE_BASE_URL: string;
-  };
 
-  type Bindings = Env & {
+    // Databases and Storages
     DB: D1Database;
     R2_BUCKET: R2Bucket;
   };
