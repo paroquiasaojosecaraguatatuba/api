@@ -38,8 +38,9 @@ CREATE INDEX IF NOT EXISTS idx_communities_slug ON communities(slug);
 
 CREATE TABLE IF NOT EXISTS clergy (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
-  full_name VARCHAR(255) NOT NULL,
   title VARCHAR(50),
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(100) UNIQUE NOT NULL,
   position VARCHAR(50) NOT NULL CHECK (position IN ('supreme_pontiff', 'diocesan_bishop', 'parish_priest', 'permanent_deacon')),
   photo_id VARCHAR(26),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

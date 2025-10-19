@@ -9,7 +9,7 @@
     "dev": "wrangler dev --local",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "migration:dev": "npx wrangler d1 execute parish_db_dev --local --file",
+    "migration:dev": "npx wrangler d1 execute parish_db_dev --local --file migrations/*.sql",
     "lint": "eslint . --ext .ts --fix",
     "format": "prettier --write ."
   },
