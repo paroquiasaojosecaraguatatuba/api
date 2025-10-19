@@ -1,4 +1,4 @@
-import { ImagesDAM } from '../images-dam';
+import type { ImagesDAM } from '../images-dam';
 
 export class R2ImagesDAM implements ImagesDAM {
   private r2: R2Bucket;

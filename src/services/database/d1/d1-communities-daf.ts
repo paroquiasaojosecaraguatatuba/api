@@ -161,7 +161,7 @@ export class D1CommunitiesDAF implements CommunitiesDAF {
     coverId: string;
     createdAt: string;
   }) {
-    const community = await this.d1
+    await this.d1
       .prepare(
         `INSERT INTO communities (id, name, slug, type, address, cover_id, created_at) 
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -176,16 +176,10 @@ export class D1CommunitiesDAF implements CommunitiesDAF {
         cover_id: string;
         created_at: string;
       }>();
-
-    if (!community) {
-      throw new DatabaseError('Failed to create user', {
-        values: { name, type, address, coverId },
-      });
-    }
   }
 
   async save(data: Community) {
-    const community = await this.d1
+    await this.d1
       .prepare(
         `UPDATE communities 
        SET name = ?, slug = ?, type = ?, address = ?, cover_id = ?, updated_at = ?
@@ -201,12 +195,6 @@ export class D1CommunitiesDAF implements CommunitiesDAF {
         data.id,
       )
       .run();
-
-    if (!community) {
-      throw new DatabaseError('Failed to save community', {
-        values: data,
-      });
-    }
   }
 
   async delete(id: string): Promise<void> {

@@ -19,11 +19,11 @@ export const openApiSpec = {
   servers: [
     {
       url: 'http://localhost:3333',
-      description: 'Servidor de Desenvolvimento',
+      description: 'Desenvolvimento - Ambiente Local',
     },
     {
       url: 'https://api.paroquiasaojosecaraguatatuba.workers.dev',
-      description: 'Servidor de Produção',
+      description: 'Staging - Ambiente de Testes',
     },
   ],
   components: {
