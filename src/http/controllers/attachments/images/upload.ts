@@ -1,6 +1,6 @@
 import { getAppContext } from '@/http/utils/getAppContext';
 import { useImageSchema } from '@/schemas/useImageSchema';
-import { makeUploadImageUseCase } from '@/use-cases/factories/makeUploadImageUseCase';
+import { makeUploadImageUseCase } from '@/use-cases/factories/attachments/make-upload-image-use-case';
 
 export const upload: ControllerFn = async (c) => {
   const { user, inputs, t } = getAppContext(c);

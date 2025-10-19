@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS communities (
   slug VARCHAR(255) UNIQUE NOT NULL,
   type VARCHAR(20) NOT NULL CHECK (type IN ('chapel', 'parish_church')),
   address TEXT NOT NULL,
-  cover_id VARCHAR(26),
+  cover_id VARCHAR(26) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
@@ -43,12 +43,29 @@ CREATE TABLE IF NOT EXISTS clergy (
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(100) UNIQUE NOT NULL,
   position VARCHAR(50) NOT NULL CHECK (position IN ('supreme_pontiff', 'diocesan_bishop', 'parish_priest', 'permanent_deacon')),
-  photo_id VARCHAR(26),
+  photo_id VARCHAR(26) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
   FOREIGN KEY (photo_id) REFERENCES attachments(id) ON DELETE SET NULL
 );
+
+CREATE TABLE IF NOT EXISTS pastorals (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  description TEXT NOT NULL,
+  responsible_name VARCHAR(255) NOT NULL,
+  contact_phone VARCHAR(20) NOT NULL,
+  cover_id VARCHAR(26) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+
+  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_pastorals_name ON pastorals(name);
+CREATE INDEX IF NOT EXISTS idx_pastorals_slug ON pastorals(slug);
 
 CREATE TABLE IF NOT EXISTS migrations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -10,7 +10,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
   async findById(id: string) {
     const attachment = await this.d1
       .prepare(
-        'SELECT id, filename, mime_type, status, uploaded_by, uploaded_at FROM attachments WHERE id = ?',
+        'SELECT id, filename, mime_type, status, uploaded_by, uploaded_at, storage FROM attachments WHERE id = ?',
       )
       .bind(id)
       .first<{
@@ -20,6 +20,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
         status: 'pending' | 'attached';
         uploaded_by: string;
         uploaded_at: string;
+        storage: 'r2';
       }>();
 
     if (!attachment) {
@@ -33,6 +34,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
       userId: attachment.uploaded_by,
       status: attachment.status,
       uploadedAt: attachment.uploaded_at,
+      storage: attachment.storage,
     };
   }
 
@@ -49,7 +51,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
     filename: string;
     mimeType: string;
     storage: 'r2';
-    status: 'pending';
+    status: 'pending' | 'attached' | 'deleted';
     uploadedAt: string;
     userId: string;
   }) {

@@ -1,7 +1,7 @@
 import { useUserSchema } from '@/schemas/useUserSchema';
 import { getAppContext } from '@/http/utils/getAppContext';
-import { makeRegisterUseCase } from '@/use-cases/factories/makeRegisterUseCase';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
+import { makeRegisterUseCase } from '@/use-cases/factories/users/make-register-use-case';
 
 export const register: ControllerFn = async (c) => {
   const { t, inputs } = getAppContext(c);

@@ -1,6 +1,6 @@
 import { getAppContext } from '@/http/utils/getAppContext';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
-import { makeDeleteCommunityUseCase } from '@/use-cases/factories/makeDeleteCommunityUseCase';
+import { makeDeleteCommunityUseCase } from '@/use-cases/factories/communities/make-delete-community-use-case';
 
 export const deleteCommunity: ControllerFn = async (c) => {
   const { t, params } = getAppContext(c);

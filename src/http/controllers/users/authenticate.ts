@@ -1,9 +1,9 @@
 import { useLoginSchema } from '@/schemas/useLoginSchema';
 import { getAppContext } from '@/http/utils/getAppContext';
 import { createAccessToken } from 'serverless-crypto-utils';
-import { makeAuthenticateUseCase } from '@/use-cases/factories/makeAuthenticateUseCase';
 import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error';
 import { setCookie } from 'hono/cookie';
+import { makeAuthenticateUseCase } from '@/use-cases/factories/users/make-authenticate-use-case';
 
 export const authenticate: ControllerFn = async (c) => {
   const { inputs, t } = getAppContext(c);

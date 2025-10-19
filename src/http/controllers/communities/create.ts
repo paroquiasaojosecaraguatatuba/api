@@ -1,9 +1,9 @@
 import { getAppContext } from '@/http/utils/getAppContext';
-import { makeCreateCommunityUseCase } from '@/use-cases/factories/makeCreateCommunityUseCase';
 import { useCommunitySchema } from '@/schemas/useCommunitySchema';
 import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found-error';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 import { ParishAlreadyExistsError } from '@/use-cases/errors/parish-already-exists-error';
+import { makeCreateCommunityUseCase } from '@/use-cases/factories/communities/make-create-community-use-case';
 
 export const createCommunity: ControllerFn = async (c) => {
   const { t, inputs } = getAppContext(c);

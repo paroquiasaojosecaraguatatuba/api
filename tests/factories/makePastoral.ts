@@ -1,16 +1,16 @@
 import { faker } from '@faker-js/faker';
 import { ulid } from 'serverless-crypto-utils/id-generation';
-import type { Community } from '@/entities/community';
+import type { Pastoral } from '@/entities/pastoral';
 import { makeSlug } from '@/use-cases/factories/make-slug';
 
-interface MakeCommunityParams extends Partial<Omit<Community, 'coverId'>> {
+interface MakePastoralParams extends Partial<Omit<Pastoral, 'coverId'>> {
   coverId: string;
 }
 
-export function makeCommunity({
+export function makePastoral({
   coverId,
   ...override
-}: MakeCommunityParams): Community {
+}: MakePastoralParams): Pastoral {
   const name = faker.lorem.sentence();
   const slug = makeSlug(name);
 
@@ -19,8 +19,10 @@ export function makeCommunity({
     coverId,
     name,
     slug,
-    type: 'chapel',
-    address: faker.location.streetAddress(true),
+    description: faker.lorem.paragraph(),
+    responsibleName: faker.person.fullName(),
+    contactPhone: faker.phone.number(),
+    active: true,
     createdAt: new Date().toISOString(),
     ...override,
   };

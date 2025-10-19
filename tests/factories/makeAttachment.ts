@@ -17,8 +17,9 @@ export function makeAttachment({
     userId,
     filename: `${faker.string.uuid()}.jpg`,
     mimeType: 'image/jpeg',
-    status: 'pending',
+    status: 'pending' as const,
     uploadedAt: new Date().toISOString(),
+    storage: 'r2',
     ...override,
   };
 }

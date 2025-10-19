@@ -3,7 +3,7 @@ import type { Community } from '@/entities/community';
 import type { AttachmentsDAF } from '@/services/database/attachments-daf';
 import type { CommunitiesDAF } from '@/services/database/communities-daf';
 import { AttachmentNotFoundError } from '../errors/attachment-not-found-error';
-import { makeSlug } from '../factories/makeSlug';
+import { makeSlug } from '../factories/make-slug';
 import { ResourceAlreadyExistsError } from '../errors/resource-already-exists-error';
 import { ParishAlreadyExistsError } from '../errors/parish-already-exists-error';
 

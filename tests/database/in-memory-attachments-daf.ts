@@ -20,7 +20,7 @@ export class InMemoryAttachmentsDAF implements AttachmentsDAF {
     mimeType: string;
     userId: string;
     storage: 'r2';
-    status: 'pending';
+    status: 'pending' | 'attached' | 'deleted';
     uploadedAt: string;
   }): Promise<void> {
     this.attachments.push(attachment);
@@ -32,9 +32,11 @@ export class InMemoryAttachmentsDAF implements AttachmentsDAF {
   ): Promise<void> {
     const index = this.attachments.findIndex((a) => a.id === id);
 
-    this.attachments[index] = {
-      ...this.attachments[index],
-      ...data,
-    };
+    if (index >= 0) {
+      this.attachments[index] = {
+        ...this.attachments[index],
+        ...data,
+      };
+    }
   }
 }

@@ -4,7 +4,7 @@ import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found
 import { ParishAlreadyExistsError } from '@/use-cases/errors/parish-already-exists-error';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
-import { makeEditCommunityUseCase } from '@/use-cases/factories/makeEditCommunityUseCase';
+import { makeEditCommunityUseCase } from '@/use-cases/factories/communities/make-edit-community-use-case';
 
 export const editCommunity: ControllerFn = async (c) => {
   const { t, inputs, params } = getAppContext(c);

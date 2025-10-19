@@ -53,7 +53,9 @@ export class InMemoryCommunitiesDAF implements CommunitiesDAF {
   async save(community: Community) {
     const index = this.communities.findIndex((c) => c.id === community.id);
 
-    this.communities[index] = community;
+    if (index >= 0) {
+      this.communities[index] = community;
+    }
   }
 
   async delete(id: string) {

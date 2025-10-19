@@ -9,6 +9,7 @@
   "error-name-already-in-use": "Este nome já está em uso por outra comunidade.",
   "error-not-allowed": "Ação não permitida.",
   "error-parish-already-exists": "A Paróquia já está cadastrada escolha outra categoria para esta comunidade.",
+  "error-pastoral-not-found": "Pastoral não encontrada.",
   "error-validation": "Os dados enviados são inválidos.",
   "file-too-large": "O arquivo não pode ser maior que {{maxSize}}.",
   "invalid-code": "Código inválido.",
