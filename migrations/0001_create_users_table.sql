@@ -34,6 +34,19 @@ CREATE TABLE IF NOT EXISTS communities (
 );
 
 CREATE INDEX IF NOT EXISTS idx_communities_name ON communities(name);
+CREATE INDEX IF NOT EXISTS idx_communities_slug ON communities(slug);
+
+CREATE TABLE IF NOT EXISTS clergy (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  title VARCHAR(50),
+  position VARCHAR(50) NOT NULL CHECK (position IN ('supreme_pontiff', 'diocesan_bishop', 'parish_priest', 'permanent_deacon')),
+  photo_id VARCHAR(26),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+
+  FOREIGN KEY (photo_id) REFERENCES attachments(id) ON DELETE SET NULL
+);
 
 CREATE TABLE IF NOT EXISTS migrations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
