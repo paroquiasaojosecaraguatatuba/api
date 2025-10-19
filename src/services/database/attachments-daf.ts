@@ -6,6 +6,9 @@ export interface AttachmentsDAF {
     id: string;
     filename: string;
     mimeType: string;
+    storage: 'r2';
+    status: 'pending';
+    uploadedAt: string;
     userId: string;
   }) => Promise<void>;
   save: (

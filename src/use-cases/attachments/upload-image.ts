@@ -5,6 +5,7 @@ import { ulid, uuidV4 } from 'serverless-crypto-utils/id-generation';
 interface UploadImageUseCaseRequest {
   file: File;
   userId: string;
+  storage: 'r2';
 }
 
 interface UploadImageUseCaseResponse {
@@ -19,6 +20,7 @@ export class UploadImageUseCase {
 
   async execute({
     file,
+    storage,
     userId,
   }: UploadImageUseCaseRequest): Promise<UploadImageUseCaseResponse> {
     const attachmentId = ulid();
@@ -43,6 +45,9 @@ export class UploadImageUseCase {
       filename,
       mimeType: file.type,
       userId,
+      status: 'pending',
+      storage,
+      uploadedAt: new Date().toISOString(),
     });
 
     return {

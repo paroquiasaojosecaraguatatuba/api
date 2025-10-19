@@ -19,12 +19,11 @@ export class InMemoryAttachmentsDAF implements AttachmentsDAF {
     filename: string;
     mimeType: string;
     userId: string;
+    storage: 'r2';
+    status: 'pending';
+    uploadedAt: string;
   }): Promise<void> {
-    this.attachments.push({
-      ...attachment,
-      status: 'pending',
-      uploadedAt: new Date().toISOString(),
-    });
+    this.attachments.push(attachment);
   }
 
   async save(

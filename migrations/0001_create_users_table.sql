@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS attachments (
   filename VARCHAR(255) NOT NULL,
   mime_type VARCHAR(100) NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'attached', 'deleted')),
+  storage VARCHAR(50) NOT NULL,
   uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   uploaded_by VARCHAR(36),
 

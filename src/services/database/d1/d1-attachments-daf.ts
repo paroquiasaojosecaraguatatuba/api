@@ -40,18 +40,24 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
     id,
     filename,
     mimeType,
+    storage,
+    status,
+    uploadedAt,
     userId,
   }: {
     id: string;
     filename: string;
     mimeType: string;
+    storage: 'r2';
+    status: 'pending';
+    uploadedAt: string;
     userId: string;
   }) {
     await this.d1
       .prepare(
-        'INSERT INTO attachments (id, filename, mime_type, uploaded_by) VALUES (?, ?, ?, ?)',
+        'INSERT INTO attachments (id, filename, mime_type, uploaded_by, storage, uploaded_at, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
       )
-      .bind(id, filename, mimeType, userId)
+      .bind(id, filename, mimeType, userId, storage, uploadedAt, status)
       .run();
   }
 
