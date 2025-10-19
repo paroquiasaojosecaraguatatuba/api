@@ -15,16 +15,18 @@ export class InMemoryUserDAF implements UsersDAF {
   }
 
   async create({
+    id,
     email,
     passwordHash,
     role,
   }: {
+    id: string;
     email: string;
     passwordHash: string;
     role: 'admin' | 'user' | 'viewer';
   }) {
     const newUser = {
-      id: (this.users.length + 1).toString(),
+      id,
       email,
       passwordHash,
       role,

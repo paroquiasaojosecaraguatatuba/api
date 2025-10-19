@@ -35,16 +35,16 @@ export class D1UserDAF implements UsersDAF {
   }
 
   async create({
+    id,
     email,
     passwordHash,
     role,
   }: {
+    id: string;
     email: string;
     passwordHash: string;
     role: 'admin' | 'user' | 'viewer';
   }) {
-    const userId = ulid();
-
     const user = await this.d1
       .prepare(
         `
@@ -53,7 +53,7 @@ export class D1UserDAF implements UsersDAF {
         RETURNING id, email, password_hash, role
       `,
       )
-      .bind(userId, email, passwordHash, role)
+      .bind(id, email, passwordHash, role)
       .first<{
         id: string;
         email: string;

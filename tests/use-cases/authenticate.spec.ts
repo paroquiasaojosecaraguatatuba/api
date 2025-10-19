@@ -3,6 +3,8 @@ import { hashPassword } from 'serverless-crypto-utils/password-hashing';
 import { AuthenticateUseCase } from '@/use-cases/users/authenticate';
 import { InMemoryUserDAF } from '../database/in-memory-users-daf';
 import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error';
+import { makeUser } from '../factories/makeUser';
+import { ulid } from 'serverless-crypto-utils/id-generation';
 
 let usersDaf: InMemoryUserDAF;
 let sut: AuthenticateUseCase;
@@ -15,6 +17,7 @@ describe('Authenticate Use Case', () => {
 
   it('should be able to authenticate', async () => {
     await usersDaf.create({
+      id: ulid(),
       email: 'janedoe@example.com',
       passwordHash: await hashPassword('123@Mudar'),
       role: 'user',
@@ -38,11 +41,12 @@ describe('Authenticate Use Case', () => {
   });
 
   it('should not be able to authenticate with wrong password', async () => {
-    await usersDaf.create({
+    const user = await makeUser({
       email: 'janedoe@example.com',
-      passwordHash: await hashPassword('123@Mudar'),
-      role: 'user',
+      password: '123@Mudar',
     });
+
+    await usersDaf.create(user);
 
     await expect(() =>
       sut.execute({

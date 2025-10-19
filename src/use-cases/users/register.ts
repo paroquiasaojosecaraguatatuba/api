@@ -2,6 +2,7 @@ import type { UsersDAF } from '@/services/database/users-daf';
 import type { User } from '@/entities/user';
 import { ResourceAlreadyExistsError } from '../errors/resource-already-exists-error';
 import { hashPassword } from 'serverless-crypto-utils/password-hashing';
+import { ulid } from 'serverless-crypto-utils/id-generation';
 
 interface RegisterUseCaseRequest {
   email: string;
@@ -30,6 +31,7 @@ export class RegisterUseCase {
     const passwordHash = await hashPassword(password);
 
     const user = await this.usersDaf.create({
+      id: ulid(),
       email,
       passwordHash,
       role,

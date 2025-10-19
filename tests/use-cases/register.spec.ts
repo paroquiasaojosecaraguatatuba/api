@@ -3,6 +3,7 @@ import { RegisterUseCase } from '@/use-cases/users/register';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 import { verifyPassword } from 'serverless-crypto-utils';
 import { InMemoryUserDAF } from '../database/in-memory-users-daf';
+import { makeUser } from '../factories/makeUser';
 
 let usersDaf: InMemoryUserDAF;
 let sut: RegisterUseCase;
