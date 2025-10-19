@@ -12,8 +12,8 @@
   "dev": {
     "ip": "localhost",
     "port": 3333,
-    "local_protocol": "https",
-    "upstream_protocol": "https",
+    "local_protocol": "http",
+    "upstream_protocol": "http",
   },
   // "kv_namespaces": [
   //   {

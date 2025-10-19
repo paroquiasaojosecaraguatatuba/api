@@ -6,6 +6,7 @@ import { onAppError } from './http/middlewares/onAppError';
 import { userRoutes } from './http/controllers/users/routes';
 import { attachmentsRoutes } from './http/controllers/attachments/routes';
 import { communitiesRoutes } from './http/controllers/communities/routes';
+import { docsRoutes } from './docs/routes';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -16,6 +17,7 @@ app.use(withDictionary, parseBody);
 app.route('/', userRoutes);
 app.route('/', communitiesRoutes);
 app.route('/', attachmentsRoutes);
+app.route('/', docsRoutes);
 
 app.onError(onAppError);
 

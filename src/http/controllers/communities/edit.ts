@@ -3,6 +3,7 @@ import { useCommunitySchema } from '@/schemas/useCommunitySchema';
 import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found-error';
 import { ParishAlreadyExistsError } from '@/use-cases/errors/parish-already-exists-error';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
+import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 import { makeEditCommunityUseCase } from '@/use-cases/factories/makeEditCommunityUseCase';
 
 export const editCommunity: ControllerFn = async (c) => {
@@ -25,8 +26,12 @@ export const editCommunity: ControllerFn = async (c) => {
       coverId,
     });
 
-    return c.json({ community });
+    return c.json(community);
   } catch (err) {
+    if (err instanceof ResourceNotFoundError) {
+      return c.json({ message: t('error-community-not-found') }, 404);
+    }
+
     if (err instanceof ResourceAlreadyExistsError) {
       return c.json({ message: t('error-name-already-in-use') }, 400);
     }

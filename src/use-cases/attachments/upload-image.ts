@@ -8,9 +8,7 @@ interface UploadImageUseCaseRequest {
 }
 
 interface UploadImageUseCaseResponse {
-  file: {
-    id: string;
-  };
+  attachmentId: string;
 }
 
 export class UploadImageUseCase {
@@ -23,7 +21,7 @@ export class UploadImageUseCase {
     file,
     userId,
   }: UploadImageUseCaseRequest): Promise<UploadImageUseCaseResponse> {
-    const id = ulid();
+    const attachmentId = ulid();
 
     const mimeToExtension: Record<string, string> = {
       'image/jpeg': 'jpg',
@@ -41,14 +39,14 @@ export class UploadImageUseCase {
     });
 
     await this.attachmentsDaf.create({
-      id,
+      id: attachmentId,
       filename,
       mimeType: file.type,
       userId,
     });
 
     return {
-      file: { id },
+      attachmentId,
     };
   }
 }

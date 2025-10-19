@@ -5,16 +5,18 @@ import { makeUploadImageUseCase } from '@/use-cases/factories/makeUploadImageUse
 export const upload: ControllerFn = async (c) => {
   const { user, inputs, t } = getAppContext(c);
 
+  console.log('user', user);
+
   const validationSchema = useImageSchema(t);
 
   const { file } = validationSchema.parse(inputs) as { file: File };
 
   const uploadImageUseCase = makeUploadImageUseCase(c);
 
-  const storageFile = await uploadImageUseCase.execute({
+  const { attachmentId } = await uploadImageUseCase.execute({
     file,
     userId: user.id,
   });
 
-  return c.json({ file: storageFile });
+  return c.json({ attachmentId }, 201);
 };

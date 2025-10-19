@@ -15,7 +15,7 @@ export const register: ControllerFn = async (c) => {
 
     const { user } = await registerUseCase.execute({ email, password, role });
 
-    return c.json({ user });
+    return c.json(user, 201);
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
       return c.json({ message: t('error-email-already-exists') }, 409);

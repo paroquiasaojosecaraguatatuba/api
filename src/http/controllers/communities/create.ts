@@ -22,7 +22,7 @@ export const createCommunity: ControllerFn = async (c) => {
       coverId,
     });
 
-    return c.json({ community });
+    return c.json(community);
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
       return c.json({ message: t('error-name-already-in-use') }, 400);
