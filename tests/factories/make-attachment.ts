@@ -19,7 +19,7 @@ export function makeAttachment({
     mimeType: 'image/jpeg',
     status: 'pending' as const,
     uploadedAt: new Date().toISOString(),
-    storage: 'r2',
+    storageProvider: 'r2',
     ...override,
   };
 }

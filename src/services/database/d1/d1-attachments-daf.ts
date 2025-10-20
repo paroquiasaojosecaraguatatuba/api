@@ -10,7 +10,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
   async findById(id: string) {
     const attachment = await this.d1
       .prepare(
-        'SELECT id, filename, mime_type, status, uploaded_by, uploaded_at, storage FROM attachments WHERE id = ?',
+        'SELECT id, filename, mime_type, status, uploaded_by, uploaded_at, storage_provider FROM attachments WHERE id = ?',
       )
       .bind(id)
       .first<{
@@ -20,7 +20,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
         status: 'pending' | 'attached';
         uploaded_by: string;
         uploaded_at: string;
-        storage: 'r2';
+        storage_provider: 'r2';
       }>();
 
     if (!attachment) {
@@ -34,7 +34,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
       userId: attachment.uploaded_by,
       status: attachment.status,
       uploadedAt: attachment.uploaded_at,
-      storage: attachment.storage,
+      storageProvider: attachment.storage_provider,
     };
   }
 
@@ -42,7 +42,7 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
     id,
     filename,
     mimeType,
-    storage,
+    storageProvider,
     status,
     uploadedAt,
     userId,
@@ -50,16 +50,16 @@ export class D1AttachmentsDAF implements AttachmentsDAF {
     id: string;
     filename: string;
     mimeType: string;
-    storage: 'r2';
+    storageProvider: 'r2';
     status: 'pending' | 'attached' | 'deleted';
     uploadedAt: string;
     userId: string;
   }) {
     await this.d1
       .prepare(
-        'INSERT INTO attachments (id, filename, mime_type, uploaded_by, storage, uploaded_at, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO attachments (id, filename, mime_type, uploaded_by, storage_provider, uploaded_at, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
       )
-      .bind(id, filename, mimeType, userId, storage, uploadedAt, status)
+      .bind(id, filename, mimeType, userId, storageProvider, uploadedAt, status)
       .run();
   }
 

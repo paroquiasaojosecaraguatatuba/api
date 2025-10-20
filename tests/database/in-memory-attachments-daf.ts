@@ -19,7 +19,7 @@ export class InMemoryAttachmentsDAF implements AttachmentsDAF {
     filename: string;
     mimeType: string;
     userId: string;
-    storage: 'r2';
+    storageProvider: 'r2';
     status: 'pending' | 'attached' | 'deleted';
     uploadedAt: string;
   }): Promise<void> {

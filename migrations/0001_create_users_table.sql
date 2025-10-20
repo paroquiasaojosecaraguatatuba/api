@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS attachments (
   filename VARCHAR(255) NOT NULL,
   mime_type VARCHAR(100) NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'attached', 'deleted')),
-  storage VARCHAR(50) NOT NULL,
+  storage_provider VARCHAR(50) NOT NULL,
   uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   uploaded_by VARCHAR(36),
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS communities (
   slug VARCHAR(255) UNIQUE NOT NULL,
   type VARCHAR(20) NOT NULL CHECK (type IN ('chapel', 'parish_church')),
   address TEXT NOT NULL,
-  cover_id VARCHAR(26) NOT NULL,
+  cover_id VARCHAR(26),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS clergy (
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(100) UNIQUE NOT NULL,
   position VARCHAR(50) NOT NULL CHECK (position IN ('supreme_pontiff', 'diocesan_bishop', 'parish_priest', 'permanent_deacon')),
-  photo_id VARCHAR(26) NOT NULL,
+  photo_id VARCHAR(26),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS pastorals (
   description TEXT NOT NULL,
   responsible_name VARCHAR(255) NOT NULL,
   contact_phone VARCHAR(20) NOT NULL,
-  cover_id VARCHAR(26) NOT NULL,
+  cover_id VARCHAR(26),
   active BOOLEAN NOT NULL DEFAULT 1,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,

@@ -14,7 +14,7 @@ export const upload: ControllerFn = async (c) => {
   const { attachmentId } = await uploadImageUseCase.execute({
     file,
     userId: user.id,
-    storage: 'r2',
+    storageProvider: 'r2',
   });
 
   return c.json({ attachmentId }, 201);
