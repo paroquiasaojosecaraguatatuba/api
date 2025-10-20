@@ -1,7 +1,9 @@
 import { attachmentPaths } from '../paths/attachments';
+import { clergyPaths } from '../paths/clergy';
 import { communityPaths } from '../paths/communities';
 import { pastoralPaths } from '../paths/pastorals';
 import { userPaths } from '../paths/users';
+import { clergySchemas } from '../schemas/clergy';
 import { commonSchemas } from '../schemas/common';
 import { communitySchemas } from '../schemas/communities';
 import { pastoralSchemas } from '../schemas/pastorals';
@@ -43,6 +45,7 @@ export const openApiSpec = {
       ...communitySchemas,
       ...commonSchemas,
       ...pastoralSchemas,
+      ...clergySchemas,
     },
   },
   security: [
@@ -55,6 +58,7 @@ export const openApiSpec = {
     ...attachmentPaths,
     ...communityPaths,
     ...pastoralPaths,
+    ...clergyPaths,
   },
   tags: [
     {
@@ -64,6 +68,10 @@ export const openApiSpec = {
     {
       name: 'Attachments',
       description: 'Operações relacionadas com anexos de arquivos',
+    },
+    {
+      name: 'Clergy',
+      description: 'Operações relacionadas com clérigos da igreja',
     },
     {
       name: 'Communities',
