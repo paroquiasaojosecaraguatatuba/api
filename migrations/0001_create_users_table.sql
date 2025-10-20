@@ -68,6 +68,41 @@ CREATE TABLE IF NOT EXISTS pastorals (
 CREATE INDEX IF NOT EXISTS idx_pastorals_name ON pastorals(name);
 CREATE INDEX IF NOT EXISTS idx_pastorals_slug ON pastorals(slug);
 
+CREATE TABLE IF NOT EXISTS blog_categories (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  name VARCHAR(50) UNIQUE NOT NULL,
+  slug VARCHAR(100) UNIQUE NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME
+);
+
+CREATE INDEX IF NOT EXISTS idx_blog_categories_name ON blog_categories(name);
+CREATE INDEX IF NOT EXISTS idx_blog_categories_slug ON blog_categories(slug);
+
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  event_date DATETIME,
+  scheduled_publish_at DATETIME,
+  scheduled_unpublish_at DATETIME,
+  published_at DATETIME,
+  cover_id VARCHAR(26),
+  category_id VARCHAR(26) NOT NULL,
+  author_id VARCHAR(26)  NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+
+  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
+  FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_blog_posts_title ON blog_posts(title);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+
 CREATE TABLE IF NOT EXISTS migrations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name VARCHAR(255) NOT NULL,
