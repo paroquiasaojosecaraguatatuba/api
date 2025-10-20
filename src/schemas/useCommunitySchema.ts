@@ -2,7 +2,7 @@ import type { TranslatorFn } from '@/dictionaries';
 import * as z from 'zod';
 
 export const useCommunitySchema = (t: TranslatorFn) => {
-  const userSchema = z.object({
+  const communitySchema = z.object({
     name: z
       .string()
       .min(1, t('required-field'))
@@ -17,5 +17,5 @@ export const useCommunitySchema = (t: TranslatorFn) => {
     coverId: z.ulid(t('invalid-file-id')),
   });
 
-  return userSchema;
+  return communitySchema;
 };

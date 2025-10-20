@@ -25,7 +25,7 @@ export const createCommunity: ControllerFn = async (c) => {
     return c.json(community);
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
-      return c.json({ message: t('error-name-already-in-use') }, 400);
+      return c.json({ message: t('error-community-name-already-in-use') }, 400);
     }
 
     if (err instanceof ParishAlreadyExistsError) {

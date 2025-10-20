@@ -1,10 +1,10 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { hashPassword } from 'serverless-crypto-utils/password-hashing';
 import { AuthenticateUseCase } from '@/use-cases/users/authenticate';
-import { InMemoryUserDAF } from '../database/in-memory-users-daf';
+import { InMemoryUserDAF } from '../../database/in-memory-users-daf';
 import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error';
-import { makeUser } from '../factories/makeUser';
 import { ulid } from 'serverless-crypto-utils/id-generation';
+import { makeUser } from '../../factories/make-user';
 
 let usersDaf: InMemoryUserDAF;
 let sut: AuthenticateUseCase;

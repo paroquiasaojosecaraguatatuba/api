@@ -1,14 +1,14 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { ulid } from 'serverless-crypto-utils';
-import { InMemoryUserDAF } from '../database/in-memory-users-daf';
-import { InMemoryCommunitiesDAF } from '../database/in-memory-communities-daf';
-import { InMemoryAttachmentsDAF } from '../database/in-memory-attachments-daf';
+import { InMemoryUserDAF } from '../../database/in-memory-users-daf';
+import { InMemoryCommunitiesDAF } from '../../database/in-memory-communities-daf';
+import { InMemoryAttachmentsDAF } from '../../database/in-memory-attachments-daf';
 import { DeleteCommunityUseCase } from '@/use-cases/communities/delete-community';
-import { makeUser } from '../factories/makeUser';
-import { makeAttachment } from '../factories/makeAttachment';
+import { makeUser } from '../../factories/make-user';
+import { makeAttachment } from '../../factories/make-attachment';
 import type { User } from '@/entities/user';
 import type { Community } from '@/entities/community';
-import { makeCommunity } from '../factories/makeCommunity';
+import { makeCommunity } from '../../factories/make-community';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 
 let usersDaf: InMemoryUserDAF;

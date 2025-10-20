@@ -2,7 +2,7 @@ import type { TranslatorFn } from '@/dictionaries';
 import * as z from 'zod';
 
 export const usePastoralSchema = (t: TranslatorFn) => {
-  const userSchema = z.object({
+  const pastoralSchema = z.object({
     name: z
       .string()
       .min(1, t('required-field'))
@@ -22,5 +22,5 @@ export const usePastoralSchema = (t: TranslatorFn) => {
     coverId: z.ulid(t('invalid-file-id')),
   });
 
-  return userSchema;
+  return pastoralSchema;
 };

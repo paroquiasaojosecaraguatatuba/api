@@ -1,14 +1,14 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { ulid } from 'serverless-crypto-utils';
-import { InMemoryUserDAF } from '../database/in-memory-users-daf';
-import { InMemoryPastoralsDAF } from '../database/in-memory-pastorals-daf';
-import { InMemoryAttachmentsDAF } from '../database/in-memory-attachments-daf';
+import { InMemoryUserDAF } from '../../database/in-memory-users-daf';
+import { InMemoryPastoralsDAF } from '../../database/in-memory-pastorals-daf';
+import { InMemoryAttachmentsDAF } from '../../database/in-memory-attachments-daf';
 import { DeletePastoralUseCase } from '@/use-cases/pastorals/delete-pastoral';
-import { makeUser } from '../factories/makeUser';
-import { makeAttachment } from '../factories/makeAttachment';
+import { makeUser } from '../../factories/make-user';
+import { makeAttachment } from '../../factories/make-attachment';
 import type { User } from '@/entities/user';
 import type { Pastoral } from '@/entities/pastoral';
-import { makePastoral } from '../factories/makePastoral';
+import { makePastoral } from '../../factories/make-pastoral';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 
 let usersDaf: InMemoryUserDAF;
