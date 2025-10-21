@@ -1,5 +1,5 @@
 export const attachmentPaths = {
-  '/attachments/images/upload': {
+  '/attachments/images': {
     post: {
       summary: 'Carrega imagem como anexo',
       description:

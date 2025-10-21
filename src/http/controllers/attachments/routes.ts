@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
-import { upload } from './images/upload';
 import { verifyToken } from '@/http/middlewares/verifyToken';
+import { imagesRoutes } from './images/routes';
 
 const app = new Hono().basePath('/attachments');
 
 app.use(verifyToken);
-app.post('/images/upload', upload);
+app.route('/', imagesRoutes);
 
 export { app as attachmentsRoutes };

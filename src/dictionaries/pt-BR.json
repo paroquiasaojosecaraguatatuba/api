@@ -1,5 +1,7 @@
 {
   "community-deleted-successfully": "Comunidade deletada com sucesso.",
+  "error-category-name-already-in-use": "Já existe uma categoria cadastrada com esse nome.",
+  "error-category-not-found": "Categoria não encontrada.",
   "error-clergy-name-already-in-use": "Já existe um clérigo cadastrado com esse nome.",
   "error-clergy-not-found": "Clérigo não encontrado.",
   "error-clergy-position-already-in-use": "Já existe um clérigo cadastrado com essa posição.",

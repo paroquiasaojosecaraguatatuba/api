@@ -9,6 +9,7 @@ import { communitiesRoutes } from './http/controllers/communities/routes';
 import { docsRoutes } from './http/controllers/docs/routes';
 import { pastoralsRoutes } from './http/controllers/pastorals/routes';
 import { clergyRoutes } from './http/controllers/clergy/routes';
+import { blogRoutes } from './http/controllers/blog/routes';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -22,6 +23,7 @@ app.route('/', attachmentsRoutes);
 app.route('/', communitiesRoutes);
 app.route('/', pastoralsRoutes);
 app.route('/', clergyRoutes);
+app.route('/', blogRoutes);
 
 app.onError(onAppError);
 

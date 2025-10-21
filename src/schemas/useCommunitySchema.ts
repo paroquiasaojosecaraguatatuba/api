@@ -6,7 +6,7 @@ export const useCommunitySchema = (t: TranslatorFn) => {
     name: z
       .string()
       .min(1, t('required-field'))
-      .max(255, t('error-max-length', { max: 100 })),
+      .max(255, t('error-max-length', { max: 255 })),
     type: z.enum(['chapel', 'parish_church'], {
       message: t('invalid-community-type'),
     }),

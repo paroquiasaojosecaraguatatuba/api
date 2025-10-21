@@ -6,7 +6,7 @@ export const usePastoralSchema = (t: TranslatorFn) => {
     name: z
       .string()
       .min(1, t('required-field'))
-      .max(255, t('error-max-length', { max: 100 })),
+      .max(255, t('error-max-length', { max: 255 })),
     description: z
       .string()
       .min(1, t('required-field'))

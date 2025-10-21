@@ -98,229 +98,226 @@ CREATE TABLE IF NOT EXISTS blog_drafts (
   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS blog_posts (
-  id VARCHAR(26) PRIMARY KEY NOT NULL,
-  title VARCHAR(255) NOT NULL,
-  slug VARCHAR(255) UNIQUE NOT NULL,
-  excerpt TEXT,
-  content TEXT NOT NULL,
-  event_date DATETIME,
-  published_at DATETIME  NOT NULL,
-  scheduled_unpublish_at DATETIME,
-  cover_id VARCHAR(26),
-  category_id VARCHAR(26) NOT NULL,
-  author_id VARCHAR(26)  NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME,
+-- CREATE TABLE IF NOT EXISTS blog_posts (
+--   id VARCHAR(26) PRIMARY KEY NOT NULL,
+--   title VARCHAR(255) NOT NULL,
+--   slug VARCHAR(255) UNIQUE NOT NULL,
+--   excerpt TEXT,
+--   content TEXT NOT NULL,
+--   event_date DATETIME,
+--   published_at DATETIME  NOT NULL,
+--   scheduled_unpublish_at DATETIME,
+--   cover_id VARCHAR(26),
+--   category_id VARCHAR(26) NOT NULL,
+--   author_id VARCHAR(26)  NOT NULL,
+--   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--   updated_at DATETIME,
 
-  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
-  FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
-  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
-);
+--   FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
+--   FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
+--   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+-- );
 
-CREATE INDEX IF NOT EXISTS idx_blog_posts_title ON blog_posts(title);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_category_published ON blog_posts(category_id, published_at DESC);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_category_unpublish ON blog_posts(category_id, scheduled_unpublish_at) WHERE scheduled_unpublish_at IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_blog_posts_category_events ON blog_posts(category_id, event_date) WHERE event_date IS NOT NULL;
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_title ON blog_posts(title);
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_category_published ON blog_posts(category_id, published_at DESC);
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_category_unpublish ON blog_posts(category_id, scheduled_unpublish_at) WHERE scheduled_unpublish_at IS NOT NULL;
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_category_events ON blog_posts(category_id, event_date) WHERE event_date IS NOT NULL;
 
--- -- ✅ Query SEMPRE com categoria (super otimizada)
--- SELECT 
---   p.id, p.title, p.slug, p.excerpt, p.published_at, p.event_date,
---   c.name as category_name, c.slug as category_slug,
---   u.email as author_email
--- FROM blog_posts p
--- JOIN blog_categories c ON c.id = p.category_id  
--- JOIN users u ON u.id = p.author_id
--- WHERE p.category_id = ? -- ✅ SEMPRE presente
---   AND p.published_at <= datetime('now')
---   AND (p.scheduled_unpublish_at IS NULL OR p.scheduled_unpublish_at > datetime('now'))
--- ORDER BY p.published_at DESC
--- LIMIT ? OFFSET ?;
--- -- ✅ Vai usar idx_blog_posts_category_published perfeitamente!
--- -- Execução: ~1-2ms mesmo com milhares de posts
+-- -- -- ✅ Query SEMPRE com categoria (super otimizada)
+-- -- SELECT 
+-- --   p.id, p.title, p.slug, p.excerpt, p.published_at, p.event_date,
+-- --   c.name as category_name, c.slug as category_slug,
+-- --   u.email as author_email
+-- -- FROM blog_posts p
+-- -- JOIN blog_categories c ON c.id = p.category_id  
+-- -- JOIN users u ON u.id = p.author_id
+-- -- WHERE p.category_id = ? -- ✅ SEMPRE presente
+-- --   AND p.published_at <= datetime('now')
+-- --   AND (p.scheduled_unpublish_at IS NULL OR p.scheduled_unpublish_at > datetime('now'))
+-- -- ORDER BY p.published_at DESC
+-- -- LIMIT ? OFFSET ?;
+-- -- -- ✅ Vai usar idx_blog_posts_category_published perfeitamente!
+-- -- -- Execução: ~1-2ms mesmo com milhares de posts
 
-CREATE TABLE IF NOT EXISTS blog_posts_archive (
-  id VARCHAR(26) PRIMARY KEY NOT NULL,
-  original_id VARCHAR(26) NOT NULL, -- ID do post original
-  title VARCHAR(255) NOT NULL,
-  slug VARCHAR(255) NOT NULL, -- Pode repetir aqui
-  excerpt TEXT,
-  content TEXT NOT NULL,
-  event_date DATETIME,
-  original_published_at DATETIME NOT NULL, -- Quando foi publicado originalmente
-  archived_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Quando foi arquivado
-  archive_reason VARCHAR(100) DEFAULT 'unpublished', -- 'unpublished', 'expired', 'manual', 'scheduled'
-  cover_id VARCHAR(26),
-  category_id VARCHAR(26) NOT NULL,
-  author_id VARCHAR(26) NOT NULL,
-  created_at DATETIME NOT NULL, -- Data original de criação
+-- CREATE TABLE IF NOT EXISTS blog_posts_archive (
+--   id VARCHAR(26) PRIMARY KEY NOT NULL,
+--   original_id VARCHAR(26) NOT NULL, -- ID do post original
+--   title VARCHAR(255) NOT NULL,
+--   slug VARCHAR(255) NOT NULL, -- Pode repetir aqui
+--   excerpt TEXT,
+--   content TEXT NOT NULL,
+--   event_date DATETIME,
+--   original_published_at DATETIME NOT NULL, -- Quando foi publicado originalmente
+--   archived_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Quando foi arquivado
+--   archive_reason VARCHAR(100) DEFAULT 'unpublished', -- 'unpublished', 'expired', 'manual', 'scheduled'
+--   cover_id VARCHAR(26),
+--   category_id VARCHAR(26) NOT NULL,
+--   author_id VARCHAR(26) NOT NULL,
+--   created_at DATETIME NOT NULL, -- Data original de criação
   
-  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
-  FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
-  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
-);
+--   FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
+--   FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
+--   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+-- );
 
-CREATE INDEX IF NOT EXISTS idx_blog_posts_archive_title ON blog_posts_archive(title);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_archive_slug ON blog_posts_archive(slug);
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_archive_title ON blog_posts_archive(title);
+-- CREATE INDEX IF NOT EXISTS idx_blog_posts_archive_slug ON blog_posts_archive(slug);
 
-CREATE TABLE IF NOT EXISTS mass_schedules (
-  id VARCHAR(26) PRIMARY KEY NOT NULL,
-  community_id VARCHAR(26) NOT NULL,
+-- CREATE TABLE IF NOT EXISTS mass_schedules (
+--   id VARCHAR(26) PRIMARY KEY NOT NULL,
+--   community_id VARCHAR(26) NOT NULL,
   
-  -- ✅ Identificação da missa
-  title VARCHAR(255) NOT NULL, -- "Missa Dominical", "Sagrado Coração", "São José"
-  type VARCHAR(50) NOT NULL CHECK (type IN ('regular', 'devotional')),
-  description TEXT,
+--   -- ✅ Identificação da missa
+--   title VARCHAR(255) NOT NULL, -- "Missa Dominical", "Sagrado Coração", "São José"
+--   type VARCHAR(50) NOT NULL CHECK (type IN ('regular', 'devotional')),
+--   description TEXT,
   
-  -- ✅ Configuração de recorrência
-  recurrence_type VARCHAR(20) NOT NULL CHECK (recurrence_type IN ('weekly', 'monthly')),
+--   -- ✅ Configuração de recorrência
+--   recurrence_type VARCHAR(20) NOT NULL CHECK (recurrence_type IN ('weekly', 'monthly')),
   
-  -- ✅ Para recorrência semanal
-  day_of_week INTEGER, -- 0=domingo, 1=segunda, ..., 6=sábado (ISO)
+--   -- ✅ Para recorrência semanal
+--   day_of_week INTEGER, -- 0=domingo, 1=segunda, ..., 6=sábado (ISO)
   
-  -- ✅ Para recorrência mensal
-  day_of_month INTEGER, -- 1-31 para dia específico do mês
-  week_of_month INTEGER, -- 1-5 para "1ª semana", "2ª semana", etc. (usado com day_of_week)
+--   -- ✅ Para recorrência mensal
+--   day_of_month INTEGER, -- 1-31 para dia específico do mês
+--   week_of_month INTEGER, -- 1-5 para "1ª semana", "2ª semana", etc. (usado com day_of_week)
   
-  -- ✅ Status e datas
-  active BOOLEAN NOT NULL DEFAULT true,
-  start_date DATE NOT NULL, -- Quando começou a vigorar
-  end_date DATE, -- NULL = indefinidamente
+--   -- ✅ Status e datas
+--   active BOOLEAN NOT NULL DEFAULT true,
+--   start_date DATE NOT NULL, -- Quando começou a vigorar
+--   end_date DATE, -- NULL = indefinidamente
   
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME,
+--   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--   updated_at DATETIME,
   
-  FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE
-);
+--   FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE
+-- );
 
--- ✅ Tabela para os horários (relacionamento 1:N)
-CREATE TABLE IF NOT EXISTS mass_schedule_times (
-  id VARCHAR(26) PRIMARY KEY NOT NULL,
-  schedule_id VARCHAR(26) NOT NULL,
-  time TIME NOT NULL, -- "09:00", "19:30"
-  active BOOLEAN NOT NULL DEFAULT true,
+-- -- ✅ Tabela para os horários (relacionamento 1:N)
+-- CREATE TABLE IF NOT EXISTS mass_schedule_times (
+--   id VARCHAR(26) PRIMARY KEY NOT NULL,
+--   schedule_id VARCHAR(26) NOT NULL,
+--   time TIME NOT NULL, -- "09:00", "19:30"
+--   active BOOLEAN NOT NULL DEFAULT true,
   
-  FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE
-);
+--   FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE
+-- );
 
--- ✅ Índices para performance
-CREATE INDEX IF NOT EXISTS idx_mass_schedules_community ON mass_schedules(community_id);
-CREATE INDEX IF NOT EXISTS idx_mass_schedules_recurrence ON mass_schedules(recurrence_type, active);
-CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_week ON mass_schedules(day_of_week) WHERE day_of_week IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_month ON mass_schedules(day_of_month) WHERE day_of_month IS NOT NULL;
+-- -- ✅ Índices para performance
+-- CREATE INDEX IF NOT EXISTS idx_mass_schedules_community ON mass_schedules(community_id);
+-- CREATE INDEX IF NOT EXISTS idx_mass_schedules_recurrence ON mass_schedules(recurrence_type, active);
+-- CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_week ON mass_schedules(day_of_week) WHERE day_of_week IS NOT NULL;
+-- CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_month ON mass_schedules(day_of_month) WHERE day_of_month IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_schedule ON mass_schedule_times(schedule_id);
-CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_time ON mass_schedule_times(time);
+-- CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_schedule ON mass_schedule_times(schedule_id);
+-- CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_time ON mass_schedule_times(time);
 
--- -- ✅ Missas de uma comunidade específica
--- SELECT 
---   ms.title, ms.type, ms.recurrence_type, ms.day_of_week, ms.day_of_month, ms.week_of_month,
---   GROUP_CONCAT(mst.time) as times
--- FROM mass_schedules ms
--- JOIN mass_schedule_times mst ON mst.schedule_id = ms.id
--- WHERE ms.community_id = ? AND ms.active = true AND mst.active = true
--- GROUP BY ms.id;
+-- -- -- ✅ Missas de uma comunidade específica
+-- -- SELECT 
+-- --   ms.title, ms.type, ms.recurrence_type, ms.day_of_week, ms.day_of_month, ms.week_of_month,
+-- --   GROUP_CONCAT(mst.time) as times
+-- -- FROM mass_schedules ms
+-- -- JOIN mass_schedule_times mst ON mst.schedule_id = ms.id
+-- -- WHERE ms.community_id = ? AND ms.active = true AND mst.active = true
+-- -- GROUP BY ms.id;
 
--- -- ✅ Todas as missas dominicais da região
--- SELECT c.name, ms.title, GROUP_CONCAT(mst.time) as times
--- FROM mass_schedules ms
--- JOIN communities c ON c.id = ms.community_id
--- JOIN mass_schedule_times mst ON mst.schedule_id = ms.id
--- WHERE ms.day_of_week = 0 AND ms.active = true AND mst.active = true
--- GROUP BY ms.id
--- ORDER BY c.name, mst.time;
+-- -- -- ✅ Todas as missas dominicais da região
+-- -- SELECT c.name, ms.title, GROUP_CONCAT(mst.time) as times
+-- -- FROM mass_schedules ms
+-- -- JOIN communities c ON c.id = ms.community_id
+-- -- JOIN mass_schedule_times mst ON mst.schedule_id = ms.id
+-- -- WHERE ms.day_of_week = 0 AND ms.active = true AND mst.active = true
+-- -- GROUP BY ms.id
+-- -- ORDER BY c.name, mst.time;
 
--- ✅ Tabela para exceções de agendamentos
-CREATE TABLE IF NOT EXISTS mass_schedule_exceptions (
-  id VARCHAR(26) PRIMARY KEY NOT NULL,
-  schedule_id VARCHAR(26) NOT NULL,
-  exception_date DATE NOT NULL, -- Data específica da exceção
-  time TIME, -- NULL = cancelar todos os horários, específico = cancelar só esse horário
-  exception_type VARCHAR(20) NOT NULL CHECK (exception_type IN ('cancelled', 'rescheduled', 'special_event')),
-  reason VARCHAR(255), -- "Festa da Padroeira", "Manutenção da Igreja", "Retiro Espiritual"
+-- -- ✅ Tabela para exceções de agendamentos
+-- CREATE TABLE IF NOT EXISTS mass_schedule_exceptions (
+--   id VARCHAR(26) PRIMARY KEY NOT NULL,
+--   schedule_id VARCHAR(26) NOT NULL,
+--   exception_date DATE NOT NULL, -- Data específica da exceção
+--   time TIME, -- NULL = cancelar todos os horários, específico = cancelar só esse horário
+--   exception_type VARCHAR(20) NOT NULL CHECK (exception_type IN ('cancelled', 'rescheduled', 'special_event')),
+--   reason VARCHAR(255), -- "Festa da Padroeira", "Manutenção da Igreja", "Retiro Espiritual"
   
-  -- ✅ Para reagendamento (tipo 'rescheduled')
-  new_time TIME, -- Novo horário se foi reagendado
-  new_location VARCHAR(255), -- Se mudou de local
+--   -- ✅ Para reagendamento (tipo 'rescheduled')
+--   new_time TIME, -- Novo horário se foi reagendado
+--   new_location VARCHAR(255), -- Se mudou de local
   
-  -- ✅ Auditoria
-  created_by VARCHAR(26) NOT NULL, -- Quem fez a exceção
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--   -- ✅ Auditoria
+--   created_by VARCHAR(26) NOT NULL, -- Quem fez a exceção
+--   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   
-  FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE,
-  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
+--   FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE,
+--   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
   
-  -- ✅ Constraint: Uma exceção por agendamento/data/horário
-  UNIQUE(schedule_id, exception_date, time)
-);
+--   -- ✅ Constraint: Uma exceção por agendamento/data/horário
+--   UNIQUE(schedule_id, exception_date, time)
+-- );
 
--- ✅ Índices para consultas rápidas
-CREATE INDEX IF NOT EXISTS idx_mass_exceptions_schedule_date ON mass_schedule_exceptions(schedule_id, exception_date);
-CREATE INDEX IF NOT EXISTS idx_mass_exceptions_date ON mass_schedule_exceptions(exception_date);
-CREATE INDEX IF NOT EXISTS idx_mass_exceptions_type ON mass_schedule_exceptions(exception_type);
+-- -- ✅ Índices para consultas rápidas
+-- CREATE INDEX IF NOT EXISTS idx_mass_exceptions_schedule_date ON mass_schedule_exceptions(schedule_id, exception_date);
+-- CREATE INDEX IF NOT EXISTS idx_mass_exceptions_date ON mass_schedule_exceptions(exception_date);
+-- CREATE INDEX IF NOT EXISTS idx_mass_exceptions_type ON mass_schedule_exceptions(exception_type);
 
--- Cancelar missa das 19:30 no dia 25/12/2024
-INSERT INTO mass_schedule_exceptions (
-  id, schedule_id, exception_date, time, exception_type, reason, created_by
-) VALUES (
-  '01K8ABC1...', 'schedule_missa_dominical', '2024-12-25', '19:30', 
-  'cancelled', 'Natal - apenas missa das 09:00', 'user_admin_id'
-);
+-- -- -- Cancelar missa das 19:30 no dia 25/12/2024
+-- -- INSERT INTO mass_schedule_exceptions (
+-- --   id, schedule_id, exception_date, time, exception_type, reason, created_by
+-- -- ) VALUES (
+-- --   '01K8ABC1...', 'schedule_missa_dominical', '2024-12-25', '19:30', 
+-- --   'cancelled', 'Natal - apenas missa das 09:00', 'user_admin_id'
+-- -- );
 
-Cancelar todas as missas do dia 01/01/2025
-INSERT INTO mass_schedule_exceptions (
-  id, schedule_id, exception_date, time, exception_type, reason, created_by
-) VALUES (
-  '01K8DEF1...', 'schedule_missa_dominical', '2025-01-01', NULL, 
-  'cancelled', 'Confraternização Universal da Paz', 'user_admin_id'
-);
+-- -- Cancelar todas as missas do dia 01/01/2025
+-- -- INSERT INTO mass_schedule_exceptions (
+-- --   id, schedule_id, exception_date, time, exception_type, reason, created_by
+-- -- ) VALUES (
+-- --   '01K8DEF1...', 'schedule_missa_dominical', '2025-01-01', NULL, 
+-- --   'cancelled', 'Confraternização Universal da Paz', 'user_admin_id'
+-- -- );
 
--- ✅ Tabela para eventos/compromissos únicos (mais genérica)
-CREATE TABLE IF NOT EXISTS events (
-  id VARCHAR(26) PRIMARY KEY NOT NULL,
-  community_id VARCHAR(26) NOT NULL,
+-- -- ✅ Tabela para eventos/compromissos únicos (mais genérica)
+-- CREATE TABLE IF NOT EXISTS events (
+--   id VARCHAR(26) PRIMARY KEY NOT NULL,
+--   community_id VARCHAR(26) NOT NULL,
+--   title VARCHAR(255) NOT NULL, -- "Festa Junina", "Retiro de Carnaval", "Missa de São José", "Casamento de João e Maria"
+--   description TEXT,
+--   event_type VARCHAR(50) NOT NULL, -- Bem flexível: 'missa', 'festa', 'retiro', 'casamento', 'batizado', 'reuniao', 'novena', etc.
   
-  -- ✅ Informações básicas do evento
-  title VARCHAR(255) NOT NULL, -- "Festa Junina", "Retiro de Carnaval", "Missa de São José", "Casamento de João e Maria"
-  description TEXT,
-  event_type VARCHAR(50) NOT NULL, -- Bem flexível: 'missa', 'festa', 'retiro', 'casamento', 'batizado', 'reuniao', 'novena', etc.
+--   event_date DATE NOT NULL,
+--   start_time TIME NOT NULL, -- "14:00"
+--   end_time TIME, -- "17:00" (opcional)
   
-  -- ✅ Data e horário
-  event_date DATE NOT NULL,
-  start_time TIME NOT NULL, -- "14:00"
-  end_time TIME, -- "17:00" (opcional)
+--   -- ✅ Local (opcional - se diferente da comunidade)
+--   custom_location VARCHAR(255), -- NULL = usar endereço da comunidade, preenchido = endereço específico
+--   location_notes TEXT, -- "Salão Paroquial", "Capela Lateral", "Quadra da Igreja", "Casa Paroquial"
   
-  -- ✅ Local (opcional - se diferente da comunidade)
-  custom_location VARCHAR(255), -- NULL = usar endereço da comunidade, preenchido = endereço específico
-  location_notes TEXT, -- "Salão Paroquial", "Capela Lateral", "Quadra da Igreja", "Casa Paroquial"
+--   -- ✅ Informações de contato/responsável
+--   contact_name VARCHAR(255),
+--   contact_phone VARCHAR(20),
   
-  -- ✅ Informações de contato/responsável
-  contact_name VARCHAR(255),
-  contact_phone VARCHAR(20),
+--   -- ✅ Observações gerais
+--   notes TEXT, -- Informações extras, requisitos, etc.
   
-  -- ✅ Observações gerais
-  notes TEXT, -- Informações extras, requisitos, etc.
+--   -- ✅ Status do evento
+--   status VARCHAR(20) NOT NULL DEFAULT 'confirmed' CHECK (status IN ('draft', 'confirmed', 'cancelled', 'completed')),
   
-  -- ✅ Status do evento
-  status VARCHAR(20) NOT NULL DEFAULT 'confirmed' CHECK (status IN ('draft', 'confirmed', 'cancelled', 'completed')),
+--   -- ✅ Auditoria
+--   created_by VARCHAR(26) NOT NULL,
+--   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--   updated_at DATETIME,
   
-  -- ✅ Auditoria
-  created_by VARCHAR(26) NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME,
-  
-  FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE,
-  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
-);
+--   FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE,
+--   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+-- );
 
--- ✅ Índices para consultas
-CREATE INDEX IF NOT EXISTS idx_events_community ON events(community_id);
-CREATE INDEX IF NOT EXISTS idx_events_date ON events(event_date);
-CREATE INDEX IF NOT EXISTS idx_events_datetime ON events(event_date, start_time);
-CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type);
-CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);
-CREATE INDEX IF NOT EXISTS idx_events_created_by ON events(created_by);
+-- -- ✅ Índices para consultas
+-- CREATE INDEX IF NOT EXISTS idx_events_community ON events(community_id);
+-- CREATE INDEX IF NOT EXISTS idx_events_date ON events(event_date);
+-- CREATE INDEX IF NOT EXISTS idx_events_datetime ON events(event_date, start_time);
+-- CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type);
+-- CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);
+-- CREATE INDEX IF NOT EXISTS idx_events_created_by ON events(created_by);
 
 -- -- ✅ 1. Missa especial
 -- INSERT INTO events (

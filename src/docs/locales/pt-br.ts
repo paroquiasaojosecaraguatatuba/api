@@ -1,8 +1,10 @@
 import { attachmentPaths } from '../paths/attachments';
+import { categoryPaths } from '../paths/blog/categories';
 import { clergyPaths } from '../paths/clergy';
 import { communityPaths } from '../paths/communities';
 import { pastoralPaths } from '../paths/pastorals';
 import { userPaths } from '../paths/users';
+import { categorySchemas } from '../schemas/categories';
 import { clergySchemas } from '../schemas/clergy';
 import { commonSchemas } from '../schemas/common';
 import { communitySchemas } from '../schemas/communities';
@@ -46,6 +48,7 @@ export const openApiSpec = {
       ...commonSchemas,
       ...pastoralSchemas,
       ...clergySchemas,
+      ...categorySchemas,
     },
   },
   security: [
@@ -59,6 +62,7 @@ export const openApiSpec = {
     ...communityPaths,
     ...pastoralPaths,
     ...clergyPaths,
+    ...categoryPaths,
   },
   tags: [
     {
@@ -81,6 +85,10 @@ export const openApiSpec = {
     {
       name: 'Pastorals',
       description: 'Operações relacionadas com pastorais da igreja',
+    },
+    {
+      name: 'BlogCategories',
+      description: 'Operações relacionadas com categorias do blog',
     },
   ],
 };

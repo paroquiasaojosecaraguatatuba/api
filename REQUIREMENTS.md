@@ -4,17 +4,26 @@
 
 ### Requisitos Funcionais
 
-- [ ] Deve ser possível criar novos acessos para usuários;
-- [ ] Deve ser possível autenticar usuários existentes;
-- [ ] Deve ser possível criar, atualizar, excluir e listar comunidades;
+- [x] Deve ser possível criar novos acessos para usuários;
+- [x] Deve ser possível autenticar usuários existentes;
+- [x] Deve ser possível fazer uploads de imagens;
+- [x] Deve ser possível criar, atualizar, excluir e listar comunidades;
+- [x] Deve ser possível criar, atualizar, excluir e listar clérigos;
+- [x] Deve ser possível criar, atualizar, excluir e listar pastorais;
+- [ ] Deve ser possível criar, atualizar, excluir e listar categorias do blog;
+- [ ] Deve ser possível criar, atualizar, excluir e listar rascunhos do blog;
 
 ### Regras de Negócio
 
-- [ ] Somente o administrador pode criar novos acessos;
-- [ ] Somente uma comunidade pode ser do tipo "paróquia";
-- [ ] O slug da comunidade deve ser único;
+- [x] Somente o administrador pode criar novos acessos;
+- [x] Somente uma comunidade pode ser do tipo 'Paróquia';
+- [x] O slug da comunidade deve ser único;
+- [x] Posições de clérigos 'Supremo Pontífice', 'Bispo Diocesano' e 'Pároco' só podem ser atribuídas uma vez;
+- [ ] O slug da categoria do blog deve ser único;
+- [ ] O slug do rascunho do blog deve ser único por categoria;
 
 ### Requisitos Não Funcionais
 
-- [ ] Utilização da Cloudflare Workers para hospedar a API;
-- [ ] Utilização do banco de dados Cloudflare D1;
+- [x] Utilização da Cloudflare Workers para hospedar a API;
+- [x] Utilização do banco de dados Cloudflare D1;
+- [x] Utilização do storage Cloudflare R2 para armazenar imagens;
