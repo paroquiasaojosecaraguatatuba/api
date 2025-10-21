@@ -19,8 +19,12 @@
 - [x] Somente uma comunidade pode ser do tipo 'Paróquia';
 - [x] O slug da comunidade deve ser único;
 - [x] Posições de clérigos 'Supremo Pontífice', 'Bispo Diocesano' e 'Pároco' só podem ser atribuídas uma vez;
-- [ ] O slug da categoria do blog deve ser único;
-- [ ] O slug do rascunho do blog deve ser único por categoria;
+- [x] O slug da categoria do blog deve ser único;
+- [x] O slug do rascunho do blog deve ser único por categoria;
+- [ ] A data do evento do rascunho deve ser uma data futura;
+- [ ] A data de publicação agendada do rascunho deve ser uma data futura;
+- [ ] A data de despublicação agendada do rascunho deve ser uma data futura e posterior à data de publicação agendada;
+- [ ] Somente o autor do rascunho ou um administrador pode editar ou excluir um rascunho.
 
 ### Requisitos Não Funcionais
 

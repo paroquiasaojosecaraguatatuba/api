@@ -1,5 +1,5 @@
 export class ResourceNotFoundError extends Error {
-  constructor() {
-    super('Resource not found.');
+  constructor(errorKey?: string) {
+    super(errorKey || 'Resource not found.');
   }
 }

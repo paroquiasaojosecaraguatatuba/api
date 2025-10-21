@@ -11,9 +11,9 @@ export const editClergy: ControllerFn = async (c) => {
 
   const validationSchema = useClergySchema(t);
 
-  const { id } = params;
-
   const { name, title, position, photoId } = validationSchema.parse(inputs);
+
+  const { id } = params;
 
   try {
     const editUseCase = makeEditClergyUseCase(c);
@@ -26,7 +26,7 @@ export const editClergy: ControllerFn = async (c) => {
       photoId,
     });
 
-    return c.json(clergy);
+    return c.json({ clergy });
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return c.json({ message: t('error-clergy-not-found') }, 404);

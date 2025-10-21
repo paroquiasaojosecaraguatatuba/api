@@ -1,10 +1,12 @@
 import { attachmentPaths } from '../paths/attachments';
-import { categoryPaths } from '../paths/blog/categories';
+import { blogCategoryPaths } from '../paths/blog/categories';
+import { blogDraftPaths } from '../paths/blog/drafts';
 import { clergyPaths } from '../paths/clergy';
 import { communityPaths } from '../paths/communities';
 import { pastoralPaths } from '../paths/pastorals';
 import { userPaths } from '../paths/users';
-import { categorySchemas } from '../schemas/categories';
+import { blogCategorySchemas } from '../schemas/blog/categories';
+import { blogDraftsSchemas } from '../schemas/blog/drafts';
 import { clergySchemas } from '../schemas/clergy';
 import { commonSchemas } from '../schemas/common';
 import { communitySchemas } from '../schemas/communities';
@@ -48,7 +50,8 @@ export const openApiSpec = {
       ...commonSchemas,
       ...pastoralSchemas,
       ...clergySchemas,
-      ...categorySchemas,
+      ...blogCategorySchemas,
+      ...blogDraftsSchemas,
     },
   },
   security: [
@@ -62,7 +65,8 @@ export const openApiSpec = {
     ...communityPaths,
     ...pastoralPaths,
     ...clergyPaths,
-    ...categoryPaths,
+    ...blogCategoryPaths,
+    ...blogDraftPaths,
   },
   tags: [
     {
@@ -89,6 +93,10 @@ export const openApiSpec = {
     {
       name: 'BlogCategories',
       description: 'Operações relacionadas com categorias do blog',
+    },
+    {
+      name: 'BlogDrafts',
+      description: 'Operações relacionadas com rascunhos do blog',
     },
   ],
 };

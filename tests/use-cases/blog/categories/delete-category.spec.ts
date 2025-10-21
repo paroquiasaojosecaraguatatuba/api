@@ -2,7 +2,7 @@ import { describe, beforeEach, it, expect } from 'vitest';
 import { InMemoryBlogCategoriesDAF } from '../../../database/in-memory-blog-categories-daf';
 import { DeleteBlogCategoryUseCase } from '@/use-cases/blog/categories/delete-category';
 import type { BlogCategory } from '@/entities/blog-category';
-import { makeCategory } from '../../../factories/make-category';
+import { makeBlogCategory } from '../../../factories/make-blog-category';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 
 let categoriesDaf: InMemoryBlogCategoriesDAF;
@@ -13,7 +13,7 @@ describe('Delete Category Use Case', () => {
   beforeEach(async () => {
     categoriesDaf = new InMemoryBlogCategoriesDAF();
     sut = new DeleteBlogCategoryUseCase(categoriesDaf);
-    category = makeCategory();
+    category = makeBlogCategory();
     await categoriesDaf.create(category);
   });
 

@@ -71,7 +71,6 @@ CREATE INDEX IF NOT EXISTS idx_pastorals_slug ON pastorals(slug);
 CREATE TABLE IF NOT EXISTS blog_categories (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
   name VARCHAR(50) UNIQUE NOT NULL,
-  slug VARCHAR(100) UNIQUE NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME
 );
@@ -82,7 +81,8 @@ CREATE INDEX IF NOT EXISTS idx_blog_categories_slug ON blog_categories(slug);
 CREATE TABLE IF NOT EXISTS blog_drafts (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
   title VARCHAR(255) NOT NULL,
-  excerpt TEXT,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  excerpt TEXT NOT NULL,
   content TEXT NOT NULL,
   event_date DATETIME,
   scheduled_publish_at DATETIME,

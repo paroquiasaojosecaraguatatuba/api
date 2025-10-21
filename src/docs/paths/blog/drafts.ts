@@ -1,27 +1,27 @@
-export const blogCategoryPaths = {
-  '/blog/categories': {
+export const blogDraftPaths = {
+  '/blog/drafts': {
     get: {
-      summary: 'Lista todas as categorias',
+      summary: 'Lista todos os rascunhos do blog',
       description:
-        'Recupera uma lista de todas as categorias religiosas registradas no sistema.',
-      tags: ['BlogCategories'],
+        'Recupera uma lista de todos os rascunhos do blog registrados no sistema.',
+      tags: ['BlogDrafts'],
       security: [{ bearerAuth: [] }],
       responses: {
         200: {
-          description: 'Lista de categorias recuperada com sucesso',
+          description: 'Lista de rascunhos recuperada com sucesso',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
-                  categories: {
+                  drafts: {
                     type: 'array',
                     items: {
-                      $ref: '#/components/schemas/Category',
+                      $ref: '#/components/schemas/BlogDraft',
                     },
                   },
                 },
-                required: ['categories'],
+                required: ['drafts'],
               },
             },
           },
@@ -39,31 +39,31 @@ export const blogCategoryPaths = {
       },
     },
     post: {
-      summary: 'Cria nova categoria',
+      summary: 'Cria novo rascunho',
       description:
-        'Cria uma nova categoria de blog. O nome da categoria deve ser exclusivo.',
-      tags: ['BlogCategories'],
+        'Cria um novo rascunho de blog. O título do rascunho deve ser exclusivo.',
+      tags: ['BlogDrafts'],
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/CreateCategoryRequest',
+              $ref: '#/components/schemas/CreateDraftRequest',
             },
           },
         },
       },
       responses: {
         201: {
-          description: 'Category created successfully',
+          description: 'Draft created successfully',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
-                  category: {
-                    $ref: '#/components/schemas/Category',
+                  draft: {
+                    $ref: '#/components/schemas/BlogDraft',
                   },
                 },
               },
@@ -93,19 +93,78 @@ export const blogCategoryPaths = {
       },
     },
   },
-  '/blog/categories/{id}': {
-    put: {
-      summary: 'Atualiza categoria',
+  '/blog/drafts/{slug}': {
+    get: {
+      summary: 'Obtém rascunho por slug',
       description:
-        'Atualiza as informações de uma categoria. Valida que o novo nome seja único (se alterado).',
-      tags: ['BlogCategories'],
+        'Recupera um rascunho de blog específico usando seu slug único.',
+      tags: ['BlogDrafts'],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: 'slug',
+          in: 'path',
+          required: true,
+          description: 'Slug do rascunho do blog',
+          schema: {
+            type: 'string',
+            example: 'contribua-com-a-construcao-do-nosso-centro-pastoral',
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Rascunho recuperado com sucesso',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  draft: {
+                    $ref: '#/components/schemas/BlogDraft',
+                  },
+                },
+                required: ['draft'],
+              },
+            },
+          },
+        },
+        404: {
+          description: 'Rascunho não encontrado',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/ResourceNotFoundResponse',
+              },
+            },
+          },
+        },
+        401: {
+          description: 'Autenticação necessária',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/UnauthorizedResponse',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/blog/drafts/{id}': {
+    put: {
+      summary: 'Atualiza rascunho',
+      description:
+        'Atualiza as informações do rascunho. Valida que o novo título seja único (se alterado).',
+      tags: ['BlogDrafts'],
       security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
           in: 'path',
           required: true,
-          description: 'ID da category no formato ULID',
+          description: 'ID da draft no formato ULID',
           schema: {
             type: 'string',
             pattern: '^[0-9A-HJKMNP-TV-Z]{26}$',
@@ -118,21 +177,21 @@ export const blogCategoryPaths = {
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/CreateCategoryRequest',
+              $ref: '#/components/schemas/CreateDraftRequest',
             },
           },
         },
       },
       responses: {
         200: {
-          description: 'Categoria atualizada com sucesso',
+          description: 'Rascunho atualizada com sucesso',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
-                  category: {
-                    $ref: '#/components/schemas/Category',
+                  draft: {
+                    $ref: '#/components/schemas/BlogDraft',
                   },
                 },
               },
@@ -140,7 +199,7 @@ export const blogCategoryPaths = {
           },
         },
         400: {
-          description: 'Nome já em uso ou erro de validação',
+          description: 'Título já em uso ou erro de validação',
           content: {
             'application/json': {
               schema: {
@@ -162,17 +221,16 @@ export const blogCategoryPaths = {
       },
     },
     delete: {
-      summary: 'Deleta category',
-      description:
-        'Exclue uma categoria permanentemente. Não pode ser desfeito.',
-      tags: ['BlogCategories'],
+      summary: 'Deleta draft',
+      description: 'Exclue um rascunho permanentemente. Não pode ser desfeito.',
+      tags: ['BlogDrafts'],
       security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
           in: 'path',
           required: true,
-          description: 'ID da categoria no formato ULID',
+          description: 'ID da rascunho no formato ULID',
           schema: {
             type: 'string',
             pattern: '^[0-9A-HJKMNP-TV-Z]{26}$',
@@ -182,10 +240,10 @@ export const blogCategoryPaths = {
       ],
       responses: {
         204: {
-          description: 'Categoria deletada com sucesso',
+          description: 'Rascunho deletado com sucesso',
         },
         404: {
-          description: 'Categoria não encontrada',
+          description: 'Rascunho não encontrado',
           content: {
             'application/json': {
               schema: {

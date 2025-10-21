@@ -1,4 +1,4 @@
-export const categorySchemas = {
+export const blogCategorySchemas = {
   Category: {
     type: 'object',
     properties: {

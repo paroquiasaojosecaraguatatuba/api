@@ -3,7 +3,7 @@ import { InMemoryBlogCategoriesDAF } from '../../../database/in-memory-blog-cate
 import { EditBlogCategoryUseCase } from '@/use-cases/blog/categories/edit-category';
 import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
 import type { BlogCategory } from '@/entities/blog-category';
-import { makeCategory } from '../../../factories/make-category';
+import { makeBlogCategory } from '../../../factories/make-blog-category';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 
 let categoriesDaf: InMemoryBlogCategoriesDAF;
@@ -14,7 +14,7 @@ describe('Edit Category Use Case', () => {
   beforeEach(async () => {
     categoriesDaf = new InMemoryBlogCategoriesDAF();
     sut = new EditBlogCategoryUseCase(categoriesDaf);
-    category = makeCategory();
+    category = makeBlogCategory();
     await categoriesDaf.create(category);
   });
 
@@ -37,7 +37,7 @@ describe('Edit Category Use Case', () => {
   });
 
   it('should not be able to edit a category with name that already in use', async () => {
-    await categoriesDaf.create(makeCategory({ name: 'Articles' }));
+    await categoriesDaf.create(makeBlogCategory({ name: 'Articles' }));
 
     await expect(() =>
       sut.execute({

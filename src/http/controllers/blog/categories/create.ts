@@ -1,6 +1,6 @@
 import { getAppContext } from '@/http/utils/getAppContext';
 import { useCategorySchema } from '@/schemas/blog/useCategorySchema';
-import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
+import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
 import { makeCreateCategoryUseCase } from '@/use-cases/factories/blog/categories/make-create-category-use-case';
 
 export const createCategory: ControllerFn = async (c) => {
@@ -17,9 +17,9 @@ export const createCategory: ControllerFn = async (c) => {
       name,
     });
 
-    return c.json(category);
+    return c.json({ category }, 201);
   } catch (err) {
-    if (err instanceof ResourceAlreadyExistsError) {
+    if (err instanceof NameAlreadyExistsError) {
       return c.json({ message: t('error-category-name-already-in-use') }, 400);
     }
 

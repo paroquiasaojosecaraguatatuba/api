@@ -26,7 +26,7 @@ export const editCommunity: ControllerFn = async (c) => {
       coverId,
     });
 
-    return c.json(community);
+    return c.json({ community });
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return c.json({ message: t('error-community-not-found') }, 404);

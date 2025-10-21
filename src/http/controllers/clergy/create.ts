@@ -22,7 +22,7 @@ export const createClergy: ControllerFn = async (c) => {
       photoId,
     });
 
-    return c.json(clergy);
+    return c.json({ clergy }, 201);
   } catch (err) {
     if (err instanceof ClergyPositionAlreadyExistsError) {
       return c.json(
@@ -36,7 +36,7 @@ export const createClergy: ControllerFn = async (c) => {
     }
 
     if (err instanceof AttachmentNotFoundError) {
-      return c.json({ message: t('error-cover-not-uploaded-yet') }, 400);
+      return c.json({ message: t('error-photo-not-uploaded-yet') }, 400);
     }
 
     throw err;

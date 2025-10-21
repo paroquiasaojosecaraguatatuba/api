@@ -18,7 +18,7 @@ declare global {
     user: {
       id: string;
       email: string;
-      role: string;
+      role: 'admin' | 'user' | 'viewer';
     };
     timezone: string;
     timezoneOffset: string;

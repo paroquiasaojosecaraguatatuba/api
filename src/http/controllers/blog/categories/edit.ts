@@ -20,7 +20,7 @@ export const editCategory: ControllerFn = async (c) => {
       name,
     });
 
-    return c.json(category);
+    return c.json({ category });
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
       return c.json({ message: t('error-category-name-already-in-use') }, 400);

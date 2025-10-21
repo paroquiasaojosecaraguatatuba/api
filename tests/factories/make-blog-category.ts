@@ -5,11 +5,11 @@ import { faker } from '@faker-js/faker';
 
 type Override = Partial<BlogCategory>;
 
-export function makeCategory(override: Override = {}): BlogCategory {
+export function makeBlogCategory(override: Override = {}): BlogCategory {
   const name = override.name ?? faker.lorem.sentence();
   return {
     id: makeId(),
-    name: faker.lorem.sentence(),
+    name,
     slug: makeSlug(name),
     createdAt: new Date().toISOString(),
     ...override,

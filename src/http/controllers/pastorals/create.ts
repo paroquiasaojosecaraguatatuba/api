@@ -23,10 +23,10 @@ export const createPastoral: ControllerFn = async (c) => {
       coverId,
     });
 
-    return c.json(pastoral);
+    return c.json({ pastoral }, 201);
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
-      return c.json({ message: t('error-name-already-in-use') }, 400);
+      return c.json({ message: t('error-pastoral-name-already-in-use') }, 400);
     }
 
     if (err instanceof AttachmentNotFoundError) {
