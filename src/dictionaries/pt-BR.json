@@ -1,6 +1,7 @@
 {
   "community-deleted-successfully": "Comunidade deletada com sucesso.",
   "error-blog-draft-title-already-in-use": "Já existe um rascunho com esse título.",
+  "error-blog-post-title-already-in-use": "Já existe um post com esse título. Por favor, escolha outro.",
   "error-category-name-already-in-use": "Já existe uma categoria cadastrada com esse nome.",
   "error-category-not-found": "Categoria não encontrada.",
   "error-clergy-name-already-in-use": "Já existe um clérigo cadastrado com esse nome.",

@@ -1,6 +1,7 @@
 import type { AttachmentsDAF } from '@/services/database/attachments-daf';
 import type { BlogDraftsDAF } from '@/services/database/blog-drafts-daf';
 import type { BlogPostDAF } from '@/services/database/blog-posts-daf';
+import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
 import { NotAllowedError } from '@/use-cases/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 
@@ -26,6 +27,15 @@ export class PublishBlogDraftUseCase {
 
     if (draft.authorId !== userId && userRole !== 'admin') {
       throw new NotAllowedError();
+    }
+
+    const postWithSameTitle = await this.postsDaf.findByTitleAndCategory({
+      title: draft.title,
+      categoryId: draft.categoryId,
+    });
+
+    if (postWithSameTitle) {
+      throw new NameAlreadyExistsError();
     }
 
     await this.postsDaf.create({

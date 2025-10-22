@@ -9,6 +9,19 @@ export class InMemoryBlogPostsDAF implements BlogPostDAF {
     return post || null;
   }
 
+  async findByTitleAndCategory({
+    title,
+    categoryId,
+  }: {
+    title: string;
+    categoryId: string;
+  }): Promise<BlogPost | null> {
+    const post = this.posts.find(
+      (post) => post.title === title && post.categoryId === categoryId,
+    );
+    return post || null;
+  }
+
   async findMany(data: { page: number }): Promise<BlogPost[]> {
     const limit = 10;
     const offset = (data.page - 1) * limit;

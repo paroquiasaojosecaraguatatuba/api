@@ -1,4 +1,5 @@
 import { getAppContext } from '@/http/utils/getAppContext';
+import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
 import { NotAllowedError } from '@/use-cases/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 import { makePublishBlogDraftUseCase } from '@/use-cases/factories/blog/drafts/make-publish-blog-draft-use-case';
@@ -25,6 +26,13 @@ export const publishDraft: ControllerFn = async (c) => {
 
     if (err instanceof NotAllowedError) {
       return c.json({ message: t('error-not-allowed-to-publish-draft') }, 403);
+    }
+
+    if (err instanceof NameAlreadyExistsError) {
+      return c.json(
+        { message: t('error-blog-post-title-already-in-use') },
+        403,
+      );
     }
 
     throw err;

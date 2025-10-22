@@ -15,6 +15,8 @@ import type { BlogDraft } from '@/entities/blog-draft';
 import { NotAllowedError } from '@/use-cases/errors/not-allowed-error';
 import { InMemoryBlogDraftsDAF } from '@tests/database/in-memory-blog-drafts-daf';
 import { InMemoryBlogPostsDAF } from '@tests/database/in-memory-blog-posts-daf';
+import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
+import { makeBlogPost } from '@tests/factories/make-blog-post';
 
 let draftsDaf: InMemoryBlogDraftsDAF;
 let postsDaf: InMemoryBlogPostsDAF;
@@ -133,5 +135,22 @@ describe('Delete Draft Use Case', () => {
         userRole: user.role,
       }),
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
+  });
+
+  it('should not be able to publish a draft with a title that already exists in the same category', async () => {
+    await postsDaf.create(
+      makeBlogPost({
+        title: draft.title,
+        categoryId: draft.categoryId,
+      }),
+    );
+
+    await expect(() =>
+      sut.execute({
+        draftId: draft.id,
+        userId: user.id,
+        userRole: user.role,
+      }),
+    ).rejects.toBeInstanceOf(NameAlreadyExistsError);
   });
 });

@@ -49,6 +49,53 @@ export class D1BlogPostsDAF implements BlogPostDAF {
     };
   }
 
+  async findByTitleAndCategory({
+    title,
+    categoryId,
+  }: {
+    title: string;
+    categoryId: string;
+  }): Promise<BlogPost | null> {
+    const post = await this.d1
+      .prepare('SELECT * FROM blog_posts WHERE title = ? AND category_id = ?')
+      .bind(title, categoryId)
+      .first<{
+        id: string;
+        title: string;
+        slug: string;
+        content: string;
+        excerpt: string;
+        event_date: string | null;
+        published_at: string;
+        scheduled_unpublish_at: string | null;
+        cover_id: string;
+        category_id: string;
+        author_id: string;
+        created_at: string;
+        updated_at: string | null;
+      }>();
+
+    if (!post) {
+      return null;
+    }
+
+    return {
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      content: post.content,
+      excerpt: post.excerpt,
+      eventDate: post.event_date || undefined,
+      publishedAt: post.published_at,
+      scheduledUnpublishAt: post.scheduled_unpublish_at || undefined,
+      coverId: post.cover_id,
+      categoryId: post.category_id,
+      authorId: post.author_id,
+      createdAt: post.created_at,
+      updatedAt: post.updated_at || undefined,
+    };
+  }
+
   async findMany(data: { page: number }): Promise<BlogPost[]> {
     const limit = 10;
     const offset = (data.page - 1) * limit;
