@@ -2,7 +2,7 @@ import { describe, beforeEach, it, expect } from 'vitest';
 import { InMemoryBlogCategoriesDAF } from '@tests/database/in-memory-blog-categories-daf';
 import { CreateBlogDraftUseCase } from '@/use-cases/blog/drafts/create-draft';
 import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
-import { InMemoryBlogDraftsDAF } from '@tests/database/in-memory-blog-draft-daf';
+import { InMemoryBlogDraftsDAF } from '@tests/database/in-memory-blog-drafts-daf';
 import { InMemoryAttachmentsDAF } from '@tests/database/in-memory-attachments-daf';
 import { InMemoryUserDAF } from '@tests/database/in-memory-users-daf';
 import type { User } from '@/entities/user';

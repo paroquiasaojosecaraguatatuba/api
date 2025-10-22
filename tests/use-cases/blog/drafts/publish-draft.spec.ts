@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { InMemoryBlogCategoriesDAF } from '@tests/database/in-memory-blog-categories-daf';
-import { DeleteBlogDraftUseCase } from '@/use-cases/blog/drafts/delete-draft';
+import { PublishBlogDraftUseCase } from '@/use-cases/blog/drafts/publish-draft';
 import { InMemoryAttachmentsDAF } from '@tests/database/in-memory-attachments-daf';
 import { InMemoryUserDAF } from '@tests/database/in-memory-users-daf';
 import type { User } from '@/entities/user';
@@ -14,12 +14,14 @@ import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-err
 import type { BlogDraft } from '@/entities/blog-draft';
 import { NotAllowedError } from '@/use-cases/errors/not-allowed-error';
 import { InMemoryBlogDraftsDAF } from '@tests/database/in-memory-blog-drafts-daf';
+import { InMemoryBlogPostsDAF } from '@tests/database/in-memory-blog-posts-daf';
 
-let draftDaf: InMemoryBlogDraftsDAF;
+let draftsDaf: InMemoryBlogDraftsDAF;
+let postsDaf: InMemoryBlogPostsDAF;
 let categoriesDaf: InMemoryBlogCategoriesDAF;
 let attachmentsDaf: InMemoryAttachmentsDAF;
 let usersDaf: InMemoryUserDAF;
-let sut: DeleteBlogDraftUseCase;
+let sut: PublishBlogDraftUseCase;
 
 let user: User;
 let category: BlogCategory;
@@ -29,10 +31,11 @@ let coverId: string;
 describe('Delete Draft Use Case', () => {
   beforeEach(async () => {
     usersDaf = new InMemoryUserDAF();
-    draftDaf = new InMemoryBlogDraftsDAF();
+    draftsDaf = new InMemoryBlogDraftsDAF();
+    postsDaf = new InMemoryBlogPostsDAF();
     categoriesDaf = new InMemoryBlogCategoriesDAF();
     attachmentsDaf = new InMemoryAttachmentsDAF();
-    sut = new DeleteBlogDraftUseCase(draftDaf, attachmentsDaf);
+    sut = new PublishBlogDraftUseCase(draftsDaf, postsDaf, attachmentsDaf);
 
     user = await usersDaf.create(await makeUser());
 
@@ -49,38 +52,68 @@ describe('Delete Draft Use Case', () => {
       categoryId: category.id,
       coverId,
     });
-    await draftDaf.create(draft);
+    await draftsDaf.create(draft);
   });
 
-  it('should be able to delete a draft', async () => {
+  it('should be able to publish a draft', async () => {
     await sut.execute({
       draftId: draft.id,
       userId: user.id,
       userRole: user.role,
     });
 
-    const deletedDraft = await draftDaf.findById(draft.id);
+    const deletedDraft = await draftsDaf.findById(draft.id);
     const attachment = await attachmentsDaf.findById(coverId);
+    const post = await postsDaf.findById(draft.id);
 
     expect(deletedDraft).toBeNull();
     expect(attachment?.status).toEqual('deleted');
+    expect(post).toEqual(
+      expect.objectContaining({
+        id: draft.id,
+        title: draft.title,
+        slug: draft.slug,
+        content: draft.content,
+        excerpt: draft.excerpt,
+        coverId: draft.coverId,
+        categoryId: draft.categoryId,
+        authorId: draft.authorId,
+        createdAt: draft.createdAt,
+        publishedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should be able to delete a draft as admin', async () => {
+  it('should be able to publish a draft as admin', async () => {
     await sut.execute({
       draftId: draft.id,
       userId: makeId(),
       userRole: 'admin',
     });
 
-    const deletedDraft = await draftDaf.findById(draft.id);
+    const deletedDraft = await draftsDaf.findById(draft.id);
     const attachment = await attachmentsDaf.findById(coverId);
+    const post = await postsDaf.findById(draft.id);
 
     expect(deletedDraft).toBeNull();
     expect(attachment?.status).toEqual('deleted');
+    expect(post).toEqual(
+      expect.objectContaining({
+        id: draft.id,
+        title: draft.title,
+        slug: draft.slug,
+        content: draft.content,
+        excerpt: draft.excerpt,
+        coverId: draft.coverId,
+        categoryId: draft.categoryId,
+        authorId: draft.authorId,
+        createdAt: draft.createdAt,
+        publishedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should not be able to delete a draft if not the author or admin', async () => {
+  it('should not be able to publish a draft if not the author or admin', async () => {
     const anotherUser = await usersDaf.create(await makeUser({ role: 'user' }));
 
     await expect(() =>

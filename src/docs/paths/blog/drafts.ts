@@ -152,6 +152,53 @@ export const blogDraftPaths = {
       },
     },
   },
+  '/blog/drafts/{id}/publish': {
+    put: {
+      summary: 'Publica rascunho',
+      description:
+        'Publica um rascunho de blog, transformando-o em uma postagem publicada.',
+      tags: ['BlogDrafts'],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          description: 'ID do rascunho no formato ULID',
+          schema: {
+            type: 'string',
+            pattern: '^[0-9A-HJKMNP-TV-Z]{26}$',
+            example: '01K7WCX2R48A8NJYWAFQN3KCN8',
+          },
+        },
+      ],
+      responses: {
+        204: {
+          description: 'Rascunho publicado com sucesso',
+        },
+        400: {
+          description: 'Rascunho não encontrado',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/ErrorResponse',
+              },
+            },
+          },
+        },
+        403: {
+          description: 'Não autorizado a publicar o rascunho',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/ErrorResponse',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   '/blog/drafts/{id}': {
     put: {
       summary: 'Atualiza rascunho',

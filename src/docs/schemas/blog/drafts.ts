@@ -76,7 +76,16 @@ export const blogDraftsSchemas = {
         description: 'Data e hora da última atualização da category',
       },
     },
-    required: ['id', 'name', 'slug', 'createdAt', 'updatedAt'],
+    required: [
+      'id',
+      'title',
+      'slug',
+      'content',
+      'categorySlug',
+      'authorId',
+      'createdAt',
+      'updatedAt',
+    ],
   },
   CreateBlogDraftRequest: {
     type: 'object',
@@ -132,6 +141,6 @@ export const blogDraftsSchemas = {
         description: 'Slug da categoria associada ao rascunho do blog',
       },
     },
-    required: ['name'],
+    required: ['title', 'slug', 'content', 'categorySlug'],
   },
 };
