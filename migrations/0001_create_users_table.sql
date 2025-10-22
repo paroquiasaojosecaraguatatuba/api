@@ -100,6 +100,25 @@ CREATE TABLE IF NOT EXISTS blog_drafts (
 
 CREATE INDEX IF NOT EXISTS idx_blog_drafts_slug ON blog_drafts(slug);
 
+CREATE TABLE IF NOT EXISTS blog_post_edits (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  post_id VARCHAR(26) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  excerpt TEXT NOT NULL,
+  content TEXT NOT NULL,
+  event_date DATETIME,
+  scheduled_publish_at DATETIME,
+  scheduled_unpublish_at DATETIME,
+  cover_id VARCHAR(26),
+  last_auto_save_at DATETIME,
+
+  FOREIGN KEY (post_id) REFERENCES blog_posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_blog_post_edits_post_id ON blog_post_edits(post_id);
+
 CREATE TABLE IF NOT EXISTS blog_posts (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
   title VARCHAR(255) NOT NULL,
@@ -112,17 +131,33 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   cover_id VARCHAR(26),
   category_id VARCHAR(26) NOT NULL,
   author_id VARCHAR(26)  NOT NULL,
+  edit_id VARCHAR(26),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
   FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
   FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
-  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (edit_id) REFERENCES blog_post_edits(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_category_published ON blog_posts(category_id, published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_category_events ON blog_posts(category_id, event_date) WHERE event_date IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS blog_post_history (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  post_id VARCHAR(26) NOT NULL,
+  action VARCHAR(20) NOT NULL CHECK (action IN ('created', 'edited', 'published', 'unpublished')),
+  user_id VARCHAR(26) NOT NULL,
+  changes_summary TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  
+  FOREIGN KEY (post_id) REFERENCES blog_posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_blog_post_history_post ON blog_post_history(post_id);
 
 -- -- -- ✅ Query SEMPRE com categoria (super otimizada)
 -- -- SELECT 
