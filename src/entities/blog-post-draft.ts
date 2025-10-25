@@ -1,16 +1,16 @@
-export type BlogPost = {
+export type BlogPostDraft = {
   id: string;
+  postId: string;
+  authorId: string;
   title: string;
   slug: string;
-  content: string;
   excerpt: string;
+  content: string;
   eventDate?: string;
-  publishedAt: string;
+  scheduledPublishAt?: string;
   scheduledUnpublishAt?: string;
   coverId: string;
-  categoryId: string;
-  authorId: string;
+  lastAutoSaveAt?: string;
   createdAt: string;
   updatedAt?: string;
-  editId?: string;
 };

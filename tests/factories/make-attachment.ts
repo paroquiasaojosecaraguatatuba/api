@@ -1,19 +1,17 @@
 import { faker } from '@faker-js/faker';
 import type { Attachment } from '@/entities/attachment';
+import { makeId } from '@/use-cases/factories/make-id';
 
-interface MakeAttachmentParams {
-  id: string;
+interface MakeAttachmentParams extends Partial<Omit<Attachment, 'userId'>> {
   userId: string;
-  override?: Partial<Omit<Attachment, 'userId' & 'id'>>;
 }
 
 export function makeAttachment({
-  id,
   userId,
-  override,
+  ...override
 }: MakeAttachmentParams): Attachment {
   return {
-    id,
+    id: makeId(),
     userId,
     filename: `${faker.string.uuid()}.jpg`,
     mimeType: 'image/jpeg',

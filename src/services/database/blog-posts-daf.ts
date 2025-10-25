@@ -8,4 +8,5 @@ export interface BlogPostDAF {
   }): Promise<BlogPost | null>;
   findMany(data: { page: number }): Promise<BlogPost[]>;
   create(post: BlogPost): Promise<void>;
+  save(post: BlogPost): Promise<void>;
 }

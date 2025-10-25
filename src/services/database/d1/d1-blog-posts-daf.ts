@@ -164,4 +164,48 @@ export class D1BlogPostsDAF implements BlogPostDAF {
       )
       .run();
   }
+
+  async save({
+    id,
+    title,
+    slug,
+    content,
+    excerpt,
+    eventDate,
+    publishedAt,
+    scheduledUnpublishAt,
+    coverId,
+    categoryId,
+    authorId,
+    createdAt,
+    updatedAt,
+    editId,
+  }: BlogPost): Promise<void> {
+    await this.d1
+      .prepare(
+        `UPDATE blog_posts SET
+          title = ?, slug = ?, content = ?, excerpt = ?, event_date = ?,
+          published_at = ?, scheduled_unpublish_at = ?, cover_id = ?,
+          category_id = ?, author_id = ?, created_at = ?, updated_at = ?, 
+          edit_id = ?
+        WHERE id = ?`,
+      )
+      .bind(
+        title,
+        slug,
+        content,
+        excerpt,
+        eventDate || null,
+        publishedAt,
+        scheduledUnpublishAt || null,
+        coverId,
+        categoryId,
+        authorId,
+        createdAt,
+        updatedAt || null,
+        editId || null,
+        id,
+      )
+      .run();
+  }
 }

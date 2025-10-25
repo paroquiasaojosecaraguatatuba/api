@@ -10,8 +10,10 @@
 - [x] Deve ser possível criar, atualizar, excluir e listar comunidades;
 - [x] Deve ser possível criar, atualizar, excluir e listar clérigos;
 - [x] Deve ser possível criar, atualizar, excluir e listar pastorais;
-- [ ] Deve ser possível criar, atualizar, excluir e listar categorias do blog;
-- [ ] Deve ser possível criar, atualizar, excluir e listar rascunhos do blog;
+- [x] Deve ser possível criar, atualizar, excluir e listar categorias do blog;
+- [x] Deve ser possível criar, atualizar, excluir e listar rascunhos do blog;
+- [ ] Deve ser possível publicar rascunhos do blog como posts;
+- [ ] Deve ser possível criar, atualizar, excluir e listar os rascunhos de edições de posts do blog;
 
 ### Regras de Negócio
 
@@ -21,10 +23,11 @@
 - [x] Posições de clérigos 'Supremo Pontífice', 'Bispo Diocesano' e 'Pároco' só podem ser atribuídas uma vez;
 - [x] O slug da categoria do blog deve ser único;
 - [x] O slug do rascunho do blog deve ser único por categoria;
-- [ ] A data do evento do rascunho deve ser uma data futura;
-- [ ] A data de publicação agendada do rascunho deve ser uma data futura;
-- [ ] A data de despublicação agendada do rascunho deve ser uma data futura e posterior à data de publicação agendada;
-- [ ] Somente o autor do rascunho ou um administrador pode editar ou excluir um rascunho.
+- [x] A data do evento do rascunho deve ser uma data futura;
+- [x] A data de publicação agendada do rascunho deve ser uma data futura;
+- [x] A data de despublicação agendada do rascunho deve ser uma data futura e posterior à data de publicação agendada;
+- [x] Somente o autor do rascunho ou um administrador pode editar, excluir ou publicar um rascunho.
+- [ ]
 
 ### Requisitos Não Funcionais
 

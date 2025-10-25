@@ -31,4 +31,11 @@ export class InMemoryBlogPostsDAF implements BlogPostDAF {
   async create(post: BlogPost): Promise<void> {
     this.posts.push(post);
   }
+
+  async save(post: BlogPost): Promise<void> {
+    const index = this.posts.findIndex((p) => p.id === post.id);
+    if (index !== -1) {
+      this.posts[index] = post;
+    }
+  }
 }

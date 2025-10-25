@@ -4,6 +4,7 @@ import type { BlogPostDAF } from '@/services/database/blog-posts-daf';
 import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
 import { NotAllowedError } from '@/use-cases/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
+import type { CreateBlogPostHistoryUseCase } from '../post-history/create-post-history';
 
 interface PublishBlogDraftUseCaseRequest {
   draftId: string;
@@ -16,6 +17,7 @@ export class PublishBlogDraftUseCase {
     private draftsDaf: BlogDraftsDAF,
     private postsDaf: BlogPostDAF,
     private attachmentsDaf: AttachmentsDAF,
+    private createHistoryUseCase: CreateBlogPostHistoryUseCase,
   ) {}
 
   async execute({ draftId, userId, userRole }: PublishBlogDraftUseCaseRequest) {
@@ -43,7 +45,14 @@ export class PublishBlogDraftUseCase {
       publishedAt: new Date().toISOString(),
     });
 
-    await this.attachmentsDaf.save(draft.coverId, { status: 'deleted' });
-    await this.draftsDaf.delete(draftId);
+    await Promise.all([
+      this.attachmentsDaf.save(draft.coverId, { status: 'attached' }),
+      this.draftsDaf.delete(draft.id),
+      this.createHistoryUseCase.execute({
+        postId: draft.id,
+        action: 'published',
+        userId,
+      }),
+    ]);
   }
 }

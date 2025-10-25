@@ -17,12 +17,15 @@ import { InMemoryBlogDraftsDAF } from '@tests/database/in-memory-blog-drafts-daf
 import { InMemoryBlogPostsDAF } from '@tests/database/in-memory-blog-posts-daf';
 import { NameAlreadyExistsError } from '@/use-cases/errors/name-already-exists-error';
 import { makeBlogPost } from '@tests/factories/make-blog-post';
+import { CreateBlogPostHistoryUseCase } from '@/use-cases/blog/post-history/create-post-history';
+import { InMemoryBlogPostHistoryDAF } from '@tests/database/in-memory-blog-post-history-daf';
 
 let draftsDaf: InMemoryBlogDraftsDAF;
 let postsDaf: InMemoryBlogPostsDAF;
 let categoriesDaf: InMemoryBlogCategoriesDAF;
 let attachmentsDaf: InMemoryAttachmentsDAF;
 let usersDaf: InMemoryUserDAF;
+let postHistoryDaf: InMemoryBlogPostHistoryDAF;
 let sut: PublishBlogDraftUseCase;
 
 let user: User;
@@ -37,7 +40,19 @@ describe('Delete Draft Use Case', () => {
     postsDaf = new InMemoryBlogPostsDAF();
     categoriesDaf = new InMemoryBlogCategoriesDAF();
     attachmentsDaf = new InMemoryAttachmentsDAF();
-    sut = new PublishBlogDraftUseCase(draftsDaf, postsDaf, attachmentsDaf);
+    postHistoryDaf = new InMemoryBlogPostHistoryDAF();
+
+    const createHistoryUseCase = new CreateBlogPostHistoryUseCase(
+      postHistoryDaf,
+      postsDaf,
+    );
+
+    sut = new PublishBlogDraftUseCase(
+      draftsDaf,
+      postsDaf,
+      attachmentsDaf,
+      createHistoryUseCase,
+    );
 
     user = await usersDaf.create(await makeUser());
 
@@ -69,7 +84,7 @@ describe('Delete Draft Use Case', () => {
     const post = await postsDaf.findById(draft.id);
 
     expect(deletedDraft).toBeNull();
-    expect(attachment?.status).toEqual('deleted');
+    expect(attachment?.status).toEqual('attached');
     expect(post).toEqual(
       expect.objectContaining({
         id: draft.id,
@@ -98,7 +113,7 @@ describe('Delete Draft Use Case', () => {
     const post = await postsDaf.findById(draft.id);
 
     expect(deletedDraft).toBeNull();
-    expect(attachment?.status).toEqual('deleted');
+    expect(attachment?.status).toEqual('attached');
     expect(post).toEqual(
       expect.objectContaining({
         id: draft.id,

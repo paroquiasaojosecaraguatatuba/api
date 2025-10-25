@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS blog_drafts (
 
 CREATE INDEX IF NOT EXISTS idx_blog_drafts_slug ON blog_drafts(slug);
 
-CREATE TABLE IF NOT EXISTS blog_post_edits (
+CREATE TABLE IF NOT EXISTS blog_post_drafts (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
   post_id VARCHAR(26) NOT NULL,
   title VARCHAR(255) NOT NULL,
@@ -112,12 +112,16 @@ CREATE TABLE IF NOT EXISTS blog_post_edits (
   scheduled_unpublish_at DATETIME,
   cover_id VARCHAR(26),
   last_auto_save_at DATETIME,
+  author_id VARCHAR(26) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
 
   FOREIGN KEY (post_id) REFERENCES blog_posts(id) ON DELETE CASCADE,
-  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL
+  FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_blog_post_edits_post_id ON blog_post_edits(post_id);
+CREATE INDEX IF NOT EXISTS idx_blog_post_drafts_post_id ON blog_post_drafts(post_id);
 
 CREATE TABLE IF NOT EXISTS blog_posts (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
@@ -131,14 +135,14 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   cover_id VARCHAR(26),
   category_id VARCHAR(26) NOT NULL,
   author_id VARCHAR(26)  NOT NULL,
-  edit_id VARCHAR(26),
+  draft_id VARCHAR(26),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME,
 
   FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
   FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (edit_id) REFERENCES blog_post_edits(id) ON DELETE SET NULL
+  FOREIGN KEY (draft_id) REFERENCES blog_post_drafts(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
@@ -148,7 +152,7 @@ CREATE INDEX IF NOT EXISTS idx_blog_posts_category_events ON blog_posts(category
 CREATE TABLE IF NOT EXISTS blog_post_history (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
   post_id VARCHAR(26) NOT NULL,
-  action VARCHAR(20) NOT NULL CHECK (action IN ('created', 'edited', 'published', 'unpublished')),
+  action VARCHAR(20) NOT NULL CHECK (action IN ('published', 'unpublished', 'edited')),
   user_id VARCHAR(26) NOT NULL,
   changes_summary TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

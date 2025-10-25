@@ -81,6 +81,11 @@ export class EditBlogDraftUseCase {
       if (!attachment) {
         throw new AttachmentNotFoundError();
       }
+
+      await Promise.all([
+        this.attachmentsDaf.save(draft.coverId, { status: 'deleted' }),
+        this.attachmentsDaf.save(attachment.id, { status: 'attached' }),
+      ]);
     }
 
     draft.title = title;

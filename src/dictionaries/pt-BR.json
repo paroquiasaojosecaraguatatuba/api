@@ -1,6 +1,8 @@
 {
   "community-deleted-successfully": "Comunidade deletada com sucesso.",
   "error-blog-draft-title-already-in-use": "Já existe um rascunho com esse título.",
+  "error-blog-post-edit-already-exists": "Já existe um rascunho para este post.",
+  "error-blog-post-not-found": "Post não encontrado.",
   "error-blog-post-title-already-in-use": "Já existe um post com esse título. Por favor, escolha outro.",
   "error-category-name-already-in-use": "Já existe uma categoria cadastrada com esse nome.",
   "error-category-not-found": "Categoria não encontrada.",
@@ -36,6 +38,7 @@
   "error-unpublish-must-be-after-publish": "Despublicação deve ser pelo menos 1 hora após a publicação",
   "error-validation": "Os dados enviados são inválidos.",
   "file-too-large": "O arquivo não pode ser maior que {{maxSize}}.",
+  "invalid-action": "Ação inválida.",
   "invalid-clergy-position": "Posição clerical inválida.",
   "invalid-code": "Código inválido.",
   "invalid-community-type": "Tipo de comunidade inválido.",
