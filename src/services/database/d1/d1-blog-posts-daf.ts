@@ -151,7 +151,7 @@ export class D1BlogPostsDAF implements BlogPostDAF {
           id, title, slug, content, excerpt, event_date,
           published_at, scheduled_unpublish_at, cover_id,
           category_id, author_id, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
         post.id,
@@ -179,6 +179,7 @@ export class D1BlogPostsDAF implements BlogPostDAF {
     excerpt,
     eventDate,
     publishedAt,
+    unpublishedAt,
     scheduledUnpublishAt,
     coverId,
     categoryId,
@@ -191,7 +192,7 @@ export class D1BlogPostsDAF implements BlogPostDAF {
       .prepare(
         `UPDATE blog_posts SET
           title = ?, slug = ?, content = ?, excerpt = ?, event_date = ?,
-          published_at = ?, scheduled_unpublish_at = ?, cover_id = ?,
+          published_at = ?, unpublished_at = ?, scheduled_unpublish_at = ?, cover_id = ?,
           category_id = ?, author_id = ?, created_at = ?, updated_at = ?, 
           edit_id = ?
         WHERE id = ?`,
@@ -203,6 +204,7 @@ export class D1BlogPostsDAF implements BlogPostDAF {
         excerpt,
         eventDate || null,
         publishedAt,
+        unpublishedAt,
         scheduledUnpublishAt || null,
         coverId,
         categoryId,

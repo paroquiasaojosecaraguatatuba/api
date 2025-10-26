@@ -22,10 +22,16 @@ export class InMemoryBlogPostsDAF implements BlogPostDAF {
     return post || null;
   }
 
-  async findMany(data: { page: number }): Promise<BlogPost[]> {
+  async findMany(data: {
+    page: number;
+    categoryId: string;
+  }): Promise<BlogPost[]> {
     const limit = 10;
     const offset = (data.page - 1) * limit;
-    return this.posts.slice(offset, offset + limit);
+
+    return this.posts
+      .filter((post) => post.categoryId === data.categoryId)
+      .slice(offset, offset + limit);
   }
 
   async create(post: BlogPost): Promise<void> {

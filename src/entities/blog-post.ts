@@ -6,6 +6,7 @@ export type BlogPost = {
   excerpt: string;
   eventDate?: string;
   publishedAt: string;
+  unpublishedAt?: string;
   scheduledUnpublishAt?: string;
   coverId: string;
   categoryId: string;

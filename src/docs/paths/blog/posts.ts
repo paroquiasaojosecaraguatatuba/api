@@ -55,4 +55,37 @@ export const blogPostPaths = {
       },
     },
   },
+  '/blog/posts/{id}/unpublish': {
+    get: {
+      summary: 'Despublica um post do blog',
+      description:
+        'Despublica um post específico do blog, tornando-o não visível para os leitores.',
+      tags: ['BlogPosts'],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          schema: { type: 'string' },
+          description: 'ID do post do blog',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Post despublicado com sucesso',
+        },
+        401: {
+          description: 'Autenticação necessária',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/UnauthorizedResponse',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };

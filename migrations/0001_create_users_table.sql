@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   content TEXT NOT NULL,
   event_date DATETIME,
   published_at DATETIME  NOT NULL,
+  unpublished_at DATETIME,
   scheduled_unpublish_at DATETIME,
   cover_id VARCHAR(26),
   category_id VARCHAR(26) NOT NULL,
@@ -162,22 +163,6 @@ CREATE TABLE IF NOT EXISTS blog_post_history (
 );
 
 CREATE INDEX IF NOT EXISTS idx_blog_post_history_post ON blog_post_history(post_id);
-
--- -- -- ✅ Query SEMPRE com categoria (super otimizada)
--- -- SELECT 
--- --   p.id, p.title, p.slug, p.excerpt, p.published_at, p.event_date,
--- --   c.name as category_name, c.slug as category_slug,
--- --   u.email as author_email
--- -- FROM blog_posts p
--- -- JOIN blog_categories c ON c.id = p.category_id  
--- -- JOIN users u ON u.id = p.author_id
--- -- WHERE p.category_id = ? -- ✅ SEMPRE presente
--- --   AND p.published_at <= datetime('now')
--- --   AND (p.scheduled_unpublish_at IS NULL OR p.scheduled_unpublish_at > datetime('now'))
--- -- ORDER BY p.published_at DESC
--- -- LIMIT ? OFFSET ?;
--- -- -- ✅ Vai usar idx_blog_posts_category_published perfeitamente!
--- -- -- Execução: ~1-2ms mesmo com milhares de posts
 
 -- CREATE TABLE IF NOT EXISTS blog_posts_archive (
 --   id VARCHAR(26) PRIMARY KEY NOT NULL,
