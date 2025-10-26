@@ -2,21 +2,21 @@ import type { BlogPostDraft } from '@/entities/blog-post-draft';
 import type { BlogPostDraftsDAF } from '@/services/database/blog-post-drafts-daf';
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 
-interface GetPostDraftUseCaseRequest {
-  postId: string;
+interface GetBlogPostDraftUseCaseRequest {
+  postDraftId: string;
 }
 
-interface GetPostDraftUseCaseResponse {
+interface GetBlogPostDraftUseCaseResponse {
   postDraft: BlogPostDraft;
 }
 
-export class GetPostDraftUseCase {
+export class GetBlogPostDraftUseCase {
   constructor(private postDraftsDaf: BlogPostDraftsDAF) {}
 
   async execute({
-    postId,
-  }: GetPostDraftUseCaseRequest): Promise<GetPostDraftUseCaseResponse> {
-    const postDraft = await this.postDraftsDaf.findByPostId(postId);
+    postDraftId,
+  }: GetBlogPostDraftUseCaseRequest): Promise<GetBlogPostDraftUseCaseResponse> {
+    const postDraft = await this.postDraftsDaf.findById(postDraftId);
 
     if (!postDraft) {
       throw new ResourceNotFoundError();

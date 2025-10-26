@@ -6,7 +6,7 @@ export interface BlogPostDAF {
     title: string;
     categoryId: string;
   }): Promise<BlogPost | null>;
-  findMany(data: { page: number }): Promise<BlogPost[]>;
+  findMany(data: { page: number; categoryId: string }): Promise<BlogPost[]>;
   create(post: BlogPost): Promise<void>;
   save(post: BlogPost): Promise<void>;
 }

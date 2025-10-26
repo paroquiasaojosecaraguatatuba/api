@@ -96,15 +96,21 @@ export class D1BlogPostsDAF implements BlogPostDAF {
     };
   }
 
-  async findMany(data: { page: number }): Promise<BlogPost[]> {
+  async findMany({
+    page,
+    categoryId,
+  }: {
+    page: number;
+    categoryId: string;
+  }): Promise<BlogPost[]> {
     const limit = 10;
-    const offset = (data.page - 1) * limit;
+    const offset = (page - 1) * limit;
 
     const posts = await this.d1
       .prepare(
-        'SELECT * FROM blog_posts ORDER BY published_at DESC LIMIT ? OFFSET ?',
+        'SELECT * FROM blog_posts WHERE category_id = ? ORDER BY published_at DESC LIMIT ? OFFSET ?',
       )
-      .bind(limit, offset)
+      .bind(categoryId, limit, offset)
       .all<{
         id: string;
         title: string;

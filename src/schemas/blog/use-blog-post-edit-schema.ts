@@ -72,6 +72,7 @@ export const useBlogPostEditSchema = (t: TranslatorFn) => {
         )
         .optional(),
       coverId: z.string().min(1, t('required-field')),
+      postId: z.ulid(t('invalid-post-id')),
     })
     // ✅ Validações cruzadas entre campos
     .refine(

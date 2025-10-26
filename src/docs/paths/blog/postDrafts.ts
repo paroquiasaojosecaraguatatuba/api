@@ -1,55 +1,17 @@
-export const blogDraftPaths = {
-  '/blog/drafts': {
-    get: {
-      summary: 'Lista todos os rascunhos do blog',
-      description:
-        'Recupera uma lista de todos os rascunhos do blog registrados no sistema.',
-      tags: ['BlogDrafts'],
-      security: [{ bearerAuth: [] }],
-      responses: {
-        200: {
-          description: 'Lista de rascunhos recuperada com sucesso',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  drafts: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/components/schemas/BlogDraft',
-                    },
-                  },
-                },
-                required: ['drafts'],
-              },
-            },
-          },
-        },
-        401: {
-          description: 'Autenticação necessária',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/UnauthorizedResponse',
-              },
-            },
-          },
-        },
-      },
-    },
+export const blogPostDraftPaths = {
+  '/blog/post-drafts': {
     post: {
-      summary: 'Cria novo rascunho',
+      summary: 'Cria novo rascunho de post',
       description:
-        'Cria um novo rascunho de blog. O título do rascunho deve ser exclusivo.',
-      tags: ['BlogDrafts'],
+        'Cria um novo rascunho de post do blog. O título do rascunho deve ser exclusivo.',
+      tags: ['BlogPostDrafts'],
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/CreateDraftRequest',
+              $ref: '#/components/schemas/CreateBlogPostDraftRequest',
             },
           },
         },
@@ -63,7 +25,7 @@ export const blogDraftPaths = {
                 type: 'object',
                 properties: {
                   draft: {
-                    $ref: '#/components/schemas/BlogDraft',
+                    $ref: '#/components/schemas/BlogPostDraft',
                   },
                 },
               },
@@ -93,71 +55,12 @@ export const blogDraftPaths = {
       },
     },
   },
-  '/blog/drafts/{slug}': {
-    get: {
-      summary: 'Obtém rascunho por slug',
-      description:
-        'Recupera um rascunho de blog específico usando seu slug único.',
-      tags: ['BlogDrafts'],
-      security: [{ bearerAuth: [] }],
-      parameters: [
-        {
-          name: 'slug',
-          in: 'path',
-          required: true,
-          description: 'Slug do rascunho do blog',
-          schema: {
-            type: 'string',
-            example: 'contribua-com-a-construcao-do-nosso-centro-pastoral',
-          },
-        },
-      ],
-      responses: {
-        200: {
-          description: 'Rascunho recuperado com sucesso',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  draft: {
-                    $ref: '#/components/schemas/BlogDraft',
-                  },
-                },
-                required: ['draft'],
-              },
-            },
-          },
-        },
-        404: {
-          description: 'Rascunho não encontrado',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/ResourceNotFoundResponse',
-              },
-            },
-          },
-        },
-        401: {
-          description: 'Autenticação necessária',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/UnauthorizedResponse',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  '/blog/drafts/{id}/publish': {
+  '/blog/post-drafts/{id}/publish': {
     put: {
-      summary: 'Publica rascunho',
+      summary: 'Publica rascunho de post',
       description:
-        'Publica um rascunho de blog, transformando-o em uma postagem publicada.',
-      tags: ['BlogDrafts'],
+        'Valida que o novo título seja único (se alterado) e atualiza a versão publicada do post e deleta o rascunho após a publicação.',
+      tags: ['BlogPostDrafts'],
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -199,12 +102,11 @@ export const blogDraftPaths = {
       },
     },
   },
-  '/blog/drafts/{id}': {
+  '/blog/post-drafts/{id}': {
     put: {
-      summary: 'Atualiza rascunho',
-      description:
-        'Atualiza as informações do rascunho. Valida que o novo título seja único (se alterado).',
-      tags: ['BlogDrafts'],
+      summary: 'Atualiza rascunho de post',
+      description: 'Atualiza as informações do rascunho',
+      tags: ['BlogPostDrafts'],
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -224,7 +126,7 @@ export const blogDraftPaths = {
         content: {
           'application/json': {
             schema: {
-              $ref: '#/components/schemas/CreateDraftRequest',
+              $ref: '#/components/schemas/CreateBlogPostDraftRequest',
             },
           },
         },
@@ -238,7 +140,7 @@ export const blogDraftPaths = {
                 type: 'object',
                 properties: {
                   draft: {
-                    $ref: '#/components/schemas/BlogDraft',
+                    $ref: '#/components/schemas/BlogPostDraft',
                   },
                 },
               },
@@ -269,8 +171,8 @@ export const blogDraftPaths = {
     },
     delete: {
       summary: 'Deleta o rascunho',
-      description: 'Exclue um rascunho permanentemente. Não pode ser desfeito.',
-      tags: ['BlogDrafts'],
+      description: 'Exclue o rascunho permanentemente. Não pode ser desfeito.',
+      tags: ['BlogPostDrafts'],
       security: [{ bearerAuth: [] }],
       parameters: [
         {

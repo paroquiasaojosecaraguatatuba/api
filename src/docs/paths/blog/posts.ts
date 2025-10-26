@@ -6,6 +6,22 @@ export const blogPostPaths = {
         'Recupera uma lista de todos os posts do blog registrados no sistema.',
       tags: ['BlogPosts'],
       security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: 'page',
+          in: 'query',
+          required: false,
+          schema: { type: 'integer', minimum: 1, default: 1 },
+          description: 'Número da página para paginação',
+        },
+        {
+          name: 'categorySlug',
+          in: 'query',
+          required: false,
+          schema: { type: 'string' },
+          description: 'Slug da categoria para filtrar os posts',
+        },
+      ],
       responses: {
         200: {
           description: 'Lista de posts recuperada com sucesso',

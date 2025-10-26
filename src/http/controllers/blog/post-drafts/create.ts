@@ -5,8 +5,8 @@ import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error';
 import { makeCreateBlogPostDraftUseCase } from '@/use-cases/factories/blog/post-drafts/make-create-blog-post-draft-use-case';
 
-export const createDraft: ControllerFn = async (c) => {
-  const { user, t, inputs, params } = getAppContext(c);
+export const createPostDraft: ControllerFn = async (c) => {
+  const { user, t, inputs } = getAppContext(c);
 
   const {
     title,
@@ -16,14 +16,13 @@ export const createDraft: ControllerFn = async (c) => {
     scheduledPublishAt,
     scheduledUnpublishAt,
     coverId,
+    postId,
   } = useBlogPostEditSchema(t).parse(inputs);
-
-  const { id: postId } = params;
 
   try {
     const createUseCase = makeCreateBlogPostDraftUseCase(c);
 
-    const { postEdit } = await createUseCase.execute({
+    const { postDraft } = await createUseCase.execute({
       title,
       content,
       excerpt,
@@ -35,7 +34,7 @@ export const createDraft: ControllerFn = async (c) => {
       postId,
     });
 
-    return c.json({ postEdit }, 201);
+    return c.json({ postDraft }, 201);
   } catch (err) {
     if (err instanceof AlreadyExistsError) {
       return c.json({ message: t('error-blog-post-edit-already-exists') }, 400);
