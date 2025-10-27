@@ -8,7 +8,7 @@ interface CreateMassScheduleUseCaseRequest {
   communityId: string;
   title?: string;
   type: MassSchedule['type'];
-  description?: string;
+  orientations?: string;
   isPrecept: boolean;
   recurrenceType: MassSchedule['recurrenceType'];
   dayOfWeek?: number;
@@ -18,7 +18,7 @@ interface CreateMassScheduleUseCaseRequest {
   startDate?: string;
   endDate?: string;
   active: boolean;
-  times: string[]; // Array de horários no formato "HH:MM"
+  times: { startTime: string; endTime: string }[]; // Array de horários no formato "HH:MM"
 }
 
 interface CreateMassScheduleUseCaseResponse {
@@ -35,7 +35,7 @@ export class CreateMassScheduleUseCase {
     communityId,
     title,
     type,
-    description,
+    orientations,
     isPrecept,
     recurrenceType,
     dayOfWeek,
@@ -60,7 +60,7 @@ export class CreateMassScheduleUseCase {
       communityId,
       title,
       type,
-      description,
+      orientations,
       isPrecept,
       recurrenceType,
       dayOfWeek,
@@ -74,7 +74,8 @@ export class CreateMassScheduleUseCase {
       times: times.map((time) => ({
         id: makeId(),
         scheduleId: massScheduleId,
-        time,
+        startTime: time.startTime,
+        endTime: time.endTime,
       })),
     };
 

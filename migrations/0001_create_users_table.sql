@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS mass_schedules (
   -- ✅ Identificação da missa
   title VARCHAR(255), -- "Missa Dominical", "Sagrado Coração", "São José"
   type VARCHAR(50) NOT NULL, -- 'regular', 'devotional', 'precept'
-  description TEXT,
+  orientations TEXT,
   is_precept BOOLEAN NOT NULL DEFAULT false,
   
   -- ✅ Configuração de recorrência
@@ -200,7 +200,8 @@ CREATE TABLE IF NOT EXISTS mass_schedules (
 CREATE TABLE IF NOT EXISTS mass_schedule_times (
   id VARCHAR(26) PRIMARY KEY NOT NULL,
   schedule_id VARCHAR(26) NOT NULL,
-  time TIME NOT NULL, -- "09:00", "19:30"
+  start_time TIME NOT NULL, -- "09:00", "19:30"
+  end_time TIME NOT NULL,
   
   FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE
 );

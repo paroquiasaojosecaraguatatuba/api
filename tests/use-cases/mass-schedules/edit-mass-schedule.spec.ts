@@ -1,4 +1,3 @@
-import type { Community } from '@/entities/community';
 import type { MassSchedule } from '@/entities/mass-schedule';
 import { EditMassScheduleUseCase } from '@/use-cases/mass-schedules/edit-mass-schedule';
 import { InMemoryMassSchedulesDAF } from '@tests/database/in-memory-mass-schedules-daf';
@@ -19,30 +18,42 @@ describe('Edit Mass Schedule Use Case', () => {
     await massSchedulesDaf.create(massSchedule);
   });
 
-  it('should be able to edit a regular weekly mass schedule', async () => {
+  it('should be able to edit a ordinary weekly mass schedule', async () => {
     const { massSchedule: newMassSchedule } = await sut.execute({
       massScheduleId: massSchedule.id,
-      type: 'regular',
+      type: 'ordinary',
       recurrenceType: 'weekly',
       dayOfWeek: 3, // Wednesday
-      times: ['09:00', '19:30'],
+      times: [
+        {
+          startTime: '09:30',
+          endTime: '10:30',
+        },
+        {
+          startTime: '19:30',
+          endTime: '20:30',
+        },
+      ],
       isPrecept: false,
+      active: true,
     });
 
     expect(newMassSchedule).toEqual(
       expect.objectContaining({
         id: massSchedule.id,
-        type: 'regular',
+        type: 'ordinary',
         recurrenceType: 'weekly',
         times: [
           {
             id: expect.any(String),
-            time: '09:00',
+            startTime: '09:30',
+            endTime: '10:30',
             scheduleId: massSchedule.id,
           },
           {
             id: expect.any(String),
-            time: '19:30',
+            startTime: '19:30',
+            endTime: '20:30',
             scheduleId: massSchedule.id,
           },
         ],
@@ -54,11 +65,17 @@ describe('Edit Mass Schedule Use Case', () => {
     await expect(() =>
       sut.execute({
         massScheduleId: 'non-existing-id',
-        type: 'regular',
+        type: 'ordinary',
         recurrenceType: 'weekly',
         dayOfWeek: 2,
-        times: ['18:00'],
+        times: [
+          {
+            startTime: '09:30',
+            endTime: '10:30',
+          },
+        ],
         isPrecept: false,
+        active: true,
       }),
     ).rejects.toThrowError('MASS_SCHEDULE_NOT_FOUND');
   });

@@ -17,7 +17,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
         community_id: string;
         title: string;
         type: MassSchedule['type'];
-        description: string;
+        orientations: string;
         is_precept: boolean;
         recurrence_type: MassSchedule['recurrenceType'];
         day_of_week: number | null;
@@ -41,13 +41,15 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
       .all<{
         id: string;
         schedule_id: string;
-        time: string;
+        start_time: string;
+        end_time: string;
       }>();
 
     const times = timesRows.results.map((row) => ({
       id: row.id,
       scheduleId: row.schedule_id,
-      time: row.time,
+      startTime: row.start_time,
+      endTime: row.end_time,
     }));
 
     return {
@@ -55,7 +57,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
       communityId: massScheduleRow.community_id,
       title: massScheduleRow.title,
       type: massScheduleRow.type,
-      description: massScheduleRow.description,
+      orientations: massScheduleRow.orientations,
       isPrecept: massScheduleRow.is_precept,
       recurrenceType: massScheduleRow.recurrence_type,
       dayOfWeek: massScheduleRow.day_of_week ?? undefined,
@@ -80,14 +82,15 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
       .prepare(
         `
         SELECT 
-          id, community_id, title, type, description, is_precept, recurrence_type,
+          id, community_id, title, type, orientations, is_precept, recurrence_type,
           day_of_week, day_of_month, week_of_month, month_of_year,
           active, start_date, end_date, created_at, updated_at,
           (
             SELECT ARRAY_AGG(JSON_OBJECT(
               'id', mst.id,
               'scheduleId', mst.schedule_id,
-              'time', mst.time
+              'startTime', mst.start_time,
+              'endTime', mst.end_time
             ))
             FROM mass_schedule_times mst
             WHERE mst.schedule_id = ms.id
@@ -101,7 +104,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
         community_id: string;
         title: string;
         type: MassSchedule['type'];
-        description: string;
+        orientations: string;
         is_precept: boolean;
         recurrence_type: MassSchedule['recurrenceType'];
         day_of_week: number | null;
@@ -113,7 +116,14 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
         end_date: string | null;
         created_at: string;
         updated_at: string;
-        times: { id: string; scheduleId: string; time: string }[] | null;
+        times:
+          | {
+              id: string;
+              scheduleId: string;
+              startTime: string;
+              endTime: string;
+            }[]
+          | null;
       }>();
 
     return massSchedules.results.map((row) => ({
@@ -121,7 +131,75 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
       communityId: row.community_id,
       title: row.title,
       type: row.type,
-      description: row.description,
+      orientations: row.orientations,
+      isPrecept: row.is_precept,
+      recurrenceType: row.recurrence_type,
+      dayOfWeek: row.day_of_week ?? undefined,
+      dayOfMonth: row.day_of_month ?? undefined,
+      weekOfMonth: row.week_of_month ?? undefined,
+      monthOfYear: row.month_of_year ?? undefined,
+      active: row.active,
+      startDate: row.start_date ?? undefined,
+      endDate: row.end_date ?? undefined,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      times: row.times ?? [],
+    }));
+  }
+
+  async findAll(): Promise<MassSchedule[]> {
+    const massSchedules = await this.d1
+      .prepare(
+        `
+        SELECT 
+          id, community_id, title, type, orientations, is_precept, recurrence_type,
+          day_of_week, day_of_month, week_of_month, month_of_year,
+          active, start_date, end_date, created_at, updated_at,
+          (
+            SELECT ARRAY_AGG(JSON_OBJECT(
+              'id', mst.id,
+              'scheduleId', mst.schedule_id,
+              'startTime', mst.start_time,
+              'endTime', mst.end_time
+            ))
+            FROM mass_schedule_times mst
+            WHERE mst.schedule_id = ms.id
+          ) as times
+        FROM mass_schedules`,
+      )
+      .all<{
+        id: string;
+        community_id: string;
+        title: string;
+        type: MassSchedule['type'];
+        orientations: string;
+        is_precept: boolean;
+        recurrence_type: MassSchedule['recurrenceType'];
+        day_of_week: number | null;
+        day_of_month: number | null;
+        week_of_month: number | null;
+        month_of_year: number | null;
+        active: boolean;
+        start_date: string | null;
+        end_date: string | null;
+        created_at: string;
+        updated_at: string;
+        times:
+          | {
+              id: string;
+              scheduleId: string;
+              startTime: string;
+              endTime: string;
+            }[]
+          | null;
+      }>();
+
+    return massSchedules.results.map((row) => ({
+      id: row.id,
+      communityId: row.community_id,
+      title: row.title,
+      type: row.type,
+      orientations: row.orientations,
       isPrecept: row.is_precept,
       recurrenceType: row.recurrence_type,
       dayOfWeek: row.day_of_week ?? undefined,
@@ -142,7 +220,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
     communityId,
     title,
     type,
-    description,
+    orientations,
     isPrecept,
     recurrenceType,
     dayOfWeek,
@@ -165,7 +243,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
             community_id,
             title,
             type,
-            description,
+            orientations,
             is_precept,
             recurrence_type,
             day_of_week,
@@ -185,7 +263,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
           communityId,
           title,
           type,
-          description,
+          orientations,
           isPrecept,
           recurrenceType,
           dayOfWeek ?? null,
@@ -204,9 +282,9 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
       queries.push(
         this.d1
           .prepare(
-            'INSERT INTO mass_schedule_times (id, schedule_id, time) VALUES (?, ?, ?)',
+            'INSERT INTO mass_schedule_times (id, schedule_id, start_time) VALUES (?, ?, ?, ?)',
           )
-          .bind(time.id, id, time.time),
+          .bind(time.id, time.scheduleId, time.startTime, time.endTime),
       );
     }
 
@@ -223,7 +301,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
             community_id = ?,
             title = ?,
             type = ?,
-            description = ?,
+            orientations = ?,
             is_precept = ?,
             recurrence_type = ?,
             day_of_week = ?,
@@ -240,7 +318,7 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
           massSchedule.communityId,
           massSchedule.title,
           massSchedule.type,
-          massSchedule.description,
+          massSchedule.orientations,
           massSchedule.isPrecept,
           massSchedule.recurrenceType,
           massSchedule.dayOfWeek ?? null,
@@ -267,9 +345,9 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
       queries.push(
         this.d1
           .prepare(
-            'INSERT INTO mass_schedule_times (id, schedule_id, time) VALUES (?, ?, ?)',
+            'INSERT INTO mass_schedule_times (id, schedule_id, start_time, end_time) VALUES (?, ?, ?, ?)',
           )
-          .bind(time.id, time.scheduleId, time.time),
+          .bind(time.id, time.scheduleId, time.startTime, time.endTime),
       );
     }
 

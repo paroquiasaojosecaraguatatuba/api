@@ -27,8 +27,18 @@ describe('Create Mass Schedule Use Case', () => {
       type: 'ordinary',
       recurrenceType: 'weekly',
       dayOfWeek: 3, // Wednesday
-      times: ['09:00', '19:30'],
+      times: [
+        {
+          startTime: '09:30',
+          endTime: '10:30',
+        },
+        {
+          startTime: '19:30',
+          endTime: '20:30',
+        },
+      ],
       isPrecept: false,
+      active: true,
     });
 
     expect(massSchedule.id).toBeDefined();
@@ -40,8 +50,18 @@ describe('Create Mass Schedule Use Case', () => {
       type: 'ordinary',
       recurrenceType: 'weekly',
       dayOfWeek: 0, // Sunday
-      times: ['09:30', '19:30'],
+      times: [
+        {
+          startTime: '09:30',
+          endTime: '10:30',
+        },
+        {
+          startTime: '19:30',
+          endTime: '20:30',
+        },
+      ],
       isPrecept: true,
+      active: true,
     });
 
     expect(massSchedule.id).toBeDefined();
@@ -54,8 +74,14 @@ describe('Create Mass Schedule Use Case', () => {
       title: 'Saint Joseph',
       recurrenceType: 'monthly',
       dayOfMonth: 19,
-      times: ['19:30'],
+      times: [
+        {
+          startTime: '19:30',
+          endTime: '20:30',
+        },
+      ],
       isPrecept: false,
+      active: true,
     });
 
     expect(massSchedule.id).toBeDefined();
@@ -69,8 +95,14 @@ describe('Create Mass Schedule Use Case', () => {
       recurrenceType: 'yearly',
       dayOfMonth: 19,
       monthOfYear: 3, // March
-      times: ['19:30'],
+      times: [
+        {
+          startTime: '19:30',
+          endTime: '20:30',
+        },
+      ],
       isPrecept: true,
+      active: true,
     });
 
     expect(massSchedule.id).toBeDefined();
@@ -84,8 +116,14 @@ describe('Create Mass Schedule Use Case', () => {
       recurrenceType: 'weekly',
       dayOfWeek: 6, // Saturday
       weekOfMonth: 1, // First week
-      times: ['08:00'],
+      times: [
+        {
+          startTime: '08:00',
+          endTime: '09:00',
+        },
+      ],
       isPrecept: false,
+      active: true,
     });
 
     expect(massSchedule.id).toBeDefined();
@@ -98,8 +136,14 @@ describe('Create Mass Schedule Use Case', () => {
         type: 'ordinary',
         recurrenceType: 'weekly',
         dayOfWeek: 2,
-        times: ['18:00'],
+        times: [
+          {
+            startTime: '18:00',
+            endTime: '19:00',
+          },
+        ],
         isPrecept: false,
+        active: true,
       }),
     ).rejects.toThrowError('COMMUNITY_NOT_FOUND');
   });

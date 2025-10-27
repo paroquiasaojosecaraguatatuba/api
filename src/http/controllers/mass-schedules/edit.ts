@@ -8,7 +8,7 @@ export const editMassSchedule: ControllerFn = async (c) => {
 
   const {
     title,
-    description,
+    orientations,
     recurrenceType,
     type,
     isPrecept,
@@ -30,7 +30,7 @@ export const editMassSchedule: ControllerFn = async (c) => {
     const { massSchedule } = await editUseCase.execute({
       massScheduleId,
       title,
-      description,
+      orientations,
       recurrenceType,
       type,
       isPrecept,

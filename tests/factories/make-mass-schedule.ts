@@ -11,8 +11,8 @@ export function makeMassSchedule(
     id: massScheduleId,
     communityId: makeId(),
     title: faker.lorem.sentences(),
-    type: 'regular',
-    description: faker.lorem.paragraph(),
+    type: 'ordinary',
+    orientations: faker.lorem.paragraph(),
     isPrecept: false,
     recurrenceType: 'weekly',
     dayOfWeek: 0,
@@ -21,7 +21,8 @@ export function makeMassSchedule(
     times: [
       {
         id: makeId(),
-        time: '09:00',
+        startTime: '09:00',
+        endTime: '10:00',
         scheduleId: massScheduleId,
       },
     ],

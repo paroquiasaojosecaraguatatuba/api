@@ -8,7 +8,7 @@ export const createMassSchedule: ControllerFn = async (c) => {
 
   const {
     title,
-    description,
+    orientations,
     recurrenceType,
     type,
     isPrecept,
@@ -30,7 +30,7 @@ export const createMassSchedule: ControllerFn = async (c) => {
     const { massSchedule } = await createUseCase.execute({
       communityId,
       title,
-      description,
+      orientations,
       recurrenceType,
       type,
       isPrecept,

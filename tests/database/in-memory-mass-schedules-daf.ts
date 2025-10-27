@@ -16,6 +16,10 @@ export class InMemoryMassSchedulesDAF implements MassSchedulesDAF {
     return this.massSchedules;
   }
 
+  async findAll(): Promise<MassSchedule[]> {
+    return this.massSchedules;
+  }
+
   async create(massSchedule: MassSchedule): Promise<void> {
     this.massSchedules.push(massSchedule);
   }
