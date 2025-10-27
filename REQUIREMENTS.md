@@ -13,7 +13,9 @@
 - [x] Deve ser possível criar, atualizar, excluir e listar categorias do blog;
 - [x] Deve ser possível criar, atualizar, excluir e listar rascunhos do blog;
 - [ ] Deve ser possível publicar rascunhos do blog como posts;
-- [ ] Deve ser possível criar, atualizar, excluir e listar os rascunhos de edições de posts do blog;
+- [ ] Deve ser possível criar, atualizar, excluir e listar os rascunhos dos posts do blog;
+- [ ] Deve ser possível publicar atualizações feitas pelo rascunho de um post
+- [ ] Deve ser possível despublicar um post
 
 ### Regras de Negócio
 
@@ -27,7 +29,6 @@
 - [x] A data de publicação agendada do rascunho deve ser uma data futura;
 - [x] A data de despublicação agendada do rascunho deve ser uma data futura e posterior à data de publicação agendada;
 - [x] Somente o autor do rascunho ou um administrador pode editar, excluir ou publicar um rascunho.
-- [ ]
 
 ### Requisitos Não Funcionais
 

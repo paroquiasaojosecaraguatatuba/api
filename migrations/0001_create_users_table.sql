@@ -164,78 +164,55 @@ CREATE TABLE IF NOT EXISTS blog_post_history (
 
 CREATE INDEX IF NOT EXISTS idx_blog_post_history_post ON blog_post_history(post_id);
 
--- CREATE TABLE IF NOT EXISTS blog_posts_archive (
---   id VARCHAR(26) PRIMARY KEY NOT NULL,
---   original_id VARCHAR(26) NOT NULL, -- ID do post original
---   title VARCHAR(255) NOT NULL,
---   slug VARCHAR(255) NOT NULL, -- Pode repetir aqui
---   excerpt TEXT,
---   content TEXT NOT NULL,
---   event_date DATETIME,
---   original_published_at DATETIME NOT NULL, -- Quando foi publicado originalmente
---   archived_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Quando foi arquivado
---   archive_reason VARCHAR(100) DEFAULT 'unpublished', -- 'unpublished', 'expired', 'manual', 'scheduled'
---   cover_id VARCHAR(26),
---   category_id VARCHAR(26) NOT NULL,
---   author_id VARCHAR(26) NOT NULL,
---   created_at DATETIME NOT NULL, -- Data original de criação
+CREATE TABLE IF NOT EXISTS mass_schedules (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  community_id VARCHAR(26) NOT NULL,
   
---   FOREIGN KEY (cover_id) REFERENCES attachments(id) ON DELETE SET NULL,
---   FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE CASCADE,
---   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
--- );
+  -- ✅ Identificação da missa
+  title VARCHAR(255), -- "Missa Dominical", "Sagrado Coração", "São José"
+  type VARCHAR(50) NOT NULL, -- 'regular', 'devotional', 'precept'
+  description TEXT,
+  is_precept BOOLEAN NOT NULL DEFAULT false,
+  
+  -- ✅ Configuração de recorrência
+  recurrence_type VARCHAR(20) NOT NULL CHECK (recurrence_type IN ('weekly', 'monthly', 'yearly')),
+  
+  -- ✅ Para recorrência semanal
+  day_of_week INTEGER, -- 0=domingo, 1=segunda, ..., 6=sábado (ISO)
+  
+  -- ✅ Para recorrência mensal
+  day_of_month INTEGER, -- 1-31 para dia específico do mês
+  week_of_month INTEGER, -- 1-5 para "1ª semana", "2ª semana", etc. (usado com day_of_week)
+  month_of_year INTEGER, -- 1-12 para recorrência anual em mês específico (usado com day_of_month ou week_of_month + day_of_week)
+  
+  -- ✅ Status e datas
+  active BOOLEAN NOT NULL DEFAULT true,
+  start_date DATE NOT NULL, -- Quando começou a vigorar
+  end_date DATE, -- NULL = indefinidamente
+  
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME,
+  
+  FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE
+);
 
--- CREATE INDEX IF NOT EXISTS idx_blog_posts_archive_title ON blog_posts_archive(title);
--- CREATE INDEX IF NOT EXISTS idx_blog_posts_archive_slug ON blog_posts_archive(slug);
-
--- CREATE TABLE IF NOT EXISTS mass_schedules (
---   id VARCHAR(26) PRIMARY KEY NOT NULL,
---   community_id VARCHAR(26) NOT NULL,
+-- ✅ Tabela para os horários (relacionamento 1:N)
+CREATE TABLE IF NOT EXISTS mass_schedule_times (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  schedule_id VARCHAR(26) NOT NULL,
+  time TIME NOT NULL, -- "09:00", "19:30"
   
---   -- ✅ Identificação da missa
---   title VARCHAR(255) NOT NULL, -- "Missa Dominical", "Sagrado Coração", "São José"
---   type VARCHAR(50) NOT NULL CHECK (type IN ('regular', 'devotional')),
---   description TEXT,
-  
---   -- ✅ Configuração de recorrência
---   recurrence_type VARCHAR(20) NOT NULL CHECK (recurrence_type IN ('weekly', 'monthly')),
-  
---   -- ✅ Para recorrência semanal
---   day_of_week INTEGER, -- 0=domingo, 1=segunda, ..., 6=sábado (ISO)
-  
---   -- ✅ Para recorrência mensal
---   day_of_month INTEGER, -- 1-31 para dia específico do mês
---   week_of_month INTEGER, -- 1-5 para "1ª semana", "2ª semana", etc. (usado com day_of_week)
-  
---   -- ✅ Status e datas
---   active BOOLEAN NOT NULL DEFAULT true,
---   start_date DATE NOT NULL, -- Quando começou a vigorar
---   end_date DATE, -- NULL = indefinidamente
-  
---   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
---   updated_at DATETIME,
-  
---   FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE
--- );
-
--- -- ✅ Tabela para os horários (relacionamento 1:N)
--- CREATE TABLE IF NOT EXISTS mass_schedule_times (
---   id VARCHAR(26) PRIMARY KEY NOT NULL,
---   schedule_id VARCHAR(26) NOT NULL,
---   time TIME NOT NULL, -- "09:00", "19:30"
---   active BOOLEAN NOT NULL DEFAULT true,
-  
---   FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE
--- );
+  FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE
+);
 
 -- -- ✅ Índices para performance
--- CREATE INDEX IF NOT EXISTS idx_mass_schedules_community ON mass_schedules(community_id);
--- CREATE INDEX IF NOT EXISTS idx_mass_schedules_recurrence ON mass_schedules(recurrence_type, active);
--- CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_week ON mass_schedules(day_of_week) WHERE day_of_week IS NOT NULL;
--- CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_month ON mass_schedules(day_of_month) WHERE day_of_month IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_mass_schedules_community ON mass_schedules(community_id);
+CREATE INDEX IF NOT EXISTS idx_mass_schedules_recurrence ON mass_schedules(recurrence_type, active);
+CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_week ON mass_schedules(day_of_week) WHERE day_of_week IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_month ON mass_schedules(day_of_month) WHERE day_of_month IS NOT NULL;
 
--- CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_schedule ON mass_schedule_times(schedule_id);
--- CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_time ON mass_schedule_times(time);
+CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_schedule ON mass_schedule_times(schedule_id);
+CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_time ON mass_schedule_times(time);
 
 -- -- -- ✅ Missas de uma comunidade específica
 -- -- SELECT 
