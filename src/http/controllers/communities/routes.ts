@@ -4,6 +4,7 @@ import { createCommunity } from './create';
 import { editCommunity } from './edit';
 import { deleteCommunity } from './delete';
 import { listCommunities } from './list';
+import { massSchedulesRoutes } from './mass-schedules/routes';
 
 const app = new Hono().basePath('/communities');
 
@@ -12,5 +13,7 @@ app.get('/', listCommunities);
 app.post('/', createCommunity);
 app.put('/:id', editCommunity);
 app.delete('/:id', deleteCommunity);
+
+app.route('/:id', massSchedulesRoutes);
 
 export { app as communitiesRoutes };

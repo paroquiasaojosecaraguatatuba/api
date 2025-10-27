@@ -7,7 +7,6 @@ export const createMassSchedule: ControllerFn = async (c) => {
   const { t, inputs, params } = getAppContext(c);
 
   const {
-    communityId,
     title,
     description,
     recurrenceType,
@@ -20,7 +19,10 @@ export const createMassSchedule: ControllerFn = async (c) => {
     monthOfYear,
     startDate,
     weekOfMonth,
+    active,
   } = useMassScheduleSchema(t).parse(inputs);
+
+  const { id: communityId } = params;
 
   try {
     const createUseCase = makeCreateMassSchedule(c);
@@ -39,6 +41,7 @@ export const createMassSchedule: ControllerFn = async (c) => {
       monthOfYear,
       startDate,
       weekOfMonth,
+      active,
     });
 
     return c.json({ massSchedule }, 201);

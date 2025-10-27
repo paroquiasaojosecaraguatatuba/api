@@ -16,10 +16,10 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
         id: string;
         community_id: string;
         title: string;
-        type: 'regular' | 'devotional' | 'solemnity';
+        type: MassSchedule['type'];
         description: string;
         is_precept: boolean;
-        recurrence_type: 'weekly' | 'monthly' | 'yearly';
+        recurrence_type: MassSchedule['recurrenceType'];
         day_of_week: number | null;
         day_of_month: number | null;
         week_of_month: number | null;
@@ -71,7 +71,11 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
     };
   }
 
-  async findMany(): Promise<MassSchedule[]> {
+  async findMany({
+    communityId,
+  }: {
+    communityId: string;
+  }): Promise<MassSchedule[]> {
     const massSchedules = await this.d1
       .prepare(
         `
@@ -88,16 +92,18 @@ export class D1MassSchedulesDAF implements MassSchedulesDAF {
             FROM mass_schedule_times mst
             WHERE mst.schedule_id = ms.id
           ) as times
-        FROM mass_schedules`,
+        FROM mass_schedules
+        WHERE community_id = ?`,
       )
+      .bind(communityId)
       .all<{
         id: string;
         community_id: string;
         title: string;
-        type: 'regular' | 'devotional' | 'solemnity';
+        type: MassSchedule['type'];
         description: string;
         is_precept: boolean;
-        recurrence_type: 'weekly' | 'monthly' | 'yearly';
+        recurrence_type: MassSchedule['recurrenceType'];
         day_of_week: number | null;
         day_of_month: number | null;
         week_of_month: number | null;

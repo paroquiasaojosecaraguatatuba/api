@@ -19,6 +19,7 @@ export const editMassSchedule: ControllerFn = async (c) => {
     monthOfYear,
     startDate,
     weekOfMonth,
+    active,
   } = useMassScheduleSchema(t).parse(inputs);
 
   const { id: massScheduleId } = params;
@@ -40,6 +41,7 @@ export const editMassSchedule: ControllerFn = async (c) => {
       monthOfYear,
       startDate,
       weekOfMonth,
+      active,
     });
 
     return c.json({ massSchedule });

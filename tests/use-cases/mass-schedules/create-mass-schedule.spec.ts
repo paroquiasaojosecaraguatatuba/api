@@ -21,10 +21,10 @@ describe('Create Mass Schedule Use Case', () => {
     await communitiesDaf.create(community);
   });
 
-  it('should be able to create a regular weekly mass schedule', async () => {
+  it('should be able to create a ordinary weekly mass schedule', async () => {
     const { massSchedule } = await sut.execute({
       communityId: community.id,
-      type: 'regular',
+      type: 'ordinary',
       recurrenceType: 'weekly',
       dayOfWeek: 3, // Wednesday
       times: ['09:00', '19:30'],
@@ -34,10 +34,10 @@ describe('Create Mass Schedule Use Case', () => {
     expect(massSchedule.id).toBeDefined();
   });
 
-  it('should be able to create a regular weekly mass schedule as precept', async () => {
+  it('should be able to create a ordinary weekly mass schedule as precept', async () => {
     const { massSchedule } = await sut.execute({
       communityId: community.id,
-      type: 'regular',
+      type: 'ordinary',
       recurrenceType: 'weekly',
       dayOfWeek: 0, // Sunday
       times: ['09:30', '19:30'],
@@ -95,7 +95,7 @@ describe('Create Mass Schedule Use Case', () => {
     await expect(() =>
       sut.execute({
         communityId: 'non-existing-community-id',
-        type: 'regular',
+        type: 'ordinary',
         recurrenceType: 'weekly',
         dayOfWeek: 2,
         times: ['18:00'],

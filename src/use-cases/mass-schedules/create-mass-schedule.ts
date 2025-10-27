@@ -7,16 +7,17 @@ import { makeId } from '../factories/make-id';
 interface CreateMassScheduleUseCaseRequest {
   communityId: string;
   title?: string;
-  type: 'regular' | 'devotional' | 'solemnity';
+  type: MassSchedule['type'];
   description?: string;
   isPrecept: boolean;
-  recurrenceType: 'weekly' | 'monthly' | 'yearly';
+  recurrenceType: MassSchedule['recurrenceType'];
   dayOfWeek?: number;
   dayOfMonth?: number;
   weekOfMonth?: number;
   monthOfYear?: number;
   startDate?: string;
   endDate?: string;
+  active: boolean;
   times: string[]; // Array de horários no formato "HH:MM"
 }
 
@@ -43,6 +44,7 @@ export class CreateMassScheduleUseCase {
     monthOfYear,
     startDate,
     endDate,
+    active,
     times,
   }: CreateMassScheduleUseCaseRequest): Promise<CreateMassScheduleUseCaseResponse> {
     const community = await this.communitiesDaf.findById(communityId);
@@ -65,7 +67,7 @@ export class CreateMassScheduleUseCase {
       dayOfMonth,
       weekOfMonth,
       monthOfYear,
-      active: startDate ? new Date(startDate) <= new Date() : true,
+      active,
       startDate,
       endDate,
       createdAt: new Date().toISOString(),

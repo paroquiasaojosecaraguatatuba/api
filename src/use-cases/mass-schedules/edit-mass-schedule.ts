@@ -6,16 +6,17 @@ import { makeId } from '../factories/make-id';
 interface EditMassScheduleUseCaseRequest {
   massScheduleId: string;
   title?: string;
-  type: 'regular' | 'devotional' | 'solemnity';
+  type: MassSchedule['type'];
   description?: string;
   isPrecept: boolean;
-  recurrenceType: 'weekly' | 'monthly' | 'yearly';
+  recurrenceType: MassSchedule['recurrenceType'];
   dayOfWeek?: number;
   dayOfMonth?: number;
   weekOfMonth?: number;
   monthOfYear?: number;
   startDate?: string;
   endDate?: string;
+  active: boolean;
   times: string[]; // Array de horários no formato "HH:MM"
 }
 
@@ -39,6 +40,7 @@ export class EditMassScheduleUseCase {
     monthOfYear,
     startDate,
     endDate,
+    active,
     times,
   }: EditMassScheduleUseCaseRequest): Promise<EditMassScheduleUseCaseResponse> {
     const massSchedule = await this.massSchedulesDaf.findById(massScheduleId);
@@ -58,6 +60,7 @@ export class EditMassScheduleUseCase {
     massSchedule.monthOfYear = monthOfYear;
     massSchedule.startDate = startDate;
     massSchedule.endDate = endDate;
+    massSchedule.active = active;
     massSchedule.times = times.map((time) => ({
       id: makeId(),
       scheduleId: massSchedule.id,

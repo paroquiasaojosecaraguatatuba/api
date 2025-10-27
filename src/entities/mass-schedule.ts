@@ -4,7 +4,7 @@ export type MassSchedule = {
   id: string;
   communityId: string;
   title?: string;
-  type: 'regular' | 'devotional' | 'solemnity';
+  type: 'ordinary' | 'devotional' | 'solemnity';
   description?: string;
   isPrecept: boolean;
   recurrenceType: 'weekly' | 'monthly' | 'yearly';

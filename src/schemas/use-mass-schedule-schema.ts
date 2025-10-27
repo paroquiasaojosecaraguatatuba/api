@@ -3,13 +3,12 @@ import * as z from 'zod';
 
 export function useMassScheduleSchema(t: TranslatorFn) {
   const schema = z.object({
-    communityId: z.ulid(t('invalid-community-id')),
     title: z
       .string()
       .max(255, t('error-max-length', { max: 255 }))
       .optional(),
-    type: z.enum<('regular' | 'devotional' | 'solemnity')[]>(
-      ['regular', 'devotional', 'solemnity'],
+    type: z.enum<('ordinary' | 'devotional' | 'solemnity')[]>(
+      ['ordinary', 'devotional', 'solemnity'],
       t('invalid-mass-schedule-type'),
     ),
     description: z
@@ -61,6 +60,7 @@ export function useMassScheduleSchema(t: TranslatorFn) {
         { message: t('invalid-end-date') },
       )
       .optional(),
+    active: z.boolean(),
     times: z
       .array(
         z.string().refine((time) => /^([0-1]\d|2[0-3]):([0-5]\d)$/.test(time), {
