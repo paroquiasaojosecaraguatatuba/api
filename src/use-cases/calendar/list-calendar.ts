@@ -97,6 +97,16 @@ export class ListCalendar {
         );
       }
 
+      // Se missa devocional cai em dia ordinário, remove outros agendamentos e prevalece a devocional
+      const hasDevotional = massSchedulesInDate.some(
+        (s) => s.type === 'devotional',
+      );
+      if (hasDevotional) {
+        massSchedulesInDate = massSchedulesInDate.filter(
+          (s) => s.type === 'devotional',
+        );
+      }
+
       const priorityTypes = ['solemnity', 'devotional', 'ordinary'];
 
       calendar.push({

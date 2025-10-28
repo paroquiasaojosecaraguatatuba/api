@@ -15,7 +15,7 @@ let sut: ListCalendar;
 let communityParish: Community;
 let communitySacredHeart: Community;
 
-describe('ListCalendar', () => {
+describe('List Calendar Use Case', () => {
   beforeEach(() => {
     massSchedulesDaf = new InMemoryMassSchedulesDAF();
     communitiesDaf = new InMemoryCommunitiesDAF();
@@ -40,7 +40,7 @@ describe('ListCalendar', () => {
         type: 'ordinary',
         active: true,
         recurrenceType: 'weekly',
-        dayOfWeek: 3, // Wednesday
+        dayOfWeek: 4, // Wednesday
         times: [
           {
             id: makeId(),
@@ -165,7 +165,7 @@ describe('ListCalendar', () => {
   });
 
   it('should return a calendar with correct days for the month', async () => {
-    const { calendar } = await sut.execute({ month: 10 });
+    const { calendar } = await sut.execute({ month: 6 });
 
     console.log(JSON.stringify(calendar, null, 2));
   });
