@@ -1,16 +1,18 @@
 export type CalendarSchedule = {
   date: string;
+  dayOfWeek: number;
+  dayOfWeekLabel: string;
   schedules: {
     type: 'mass' | 'event';
     title?: string;
     massType?: 'ordinary' | 'devotional' | 'solemnity';
     orientations?: string;
-    isPrecept: string;
+    isPrecept: boolean;
     startTime: string;
     endTime: string;
     community: {
       id: string;
-      title: string;
+      name: string;
       address: string;
     };
   }[];

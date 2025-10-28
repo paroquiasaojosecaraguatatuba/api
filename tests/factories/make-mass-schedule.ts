@@ -10,9 +10,7 @@ export function makeMassSchedule(
   return {
     id: massScheduleId,
     communityId: makeId(),
-    title: faker.lorem.sentences(),
     type: 'ordinary',
-    orientations: faker.lorem.paragraph(),
     isPrecept: false,
     recurrenceType: 'weekly',
     dayOfWeek: 0,
