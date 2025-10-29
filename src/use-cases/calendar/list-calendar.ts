@@ -6,6 +6,7 @@ import moment from 'moment';
 
 interface ListCalendarRequest {
   month: number;
+  year: number;
 }
 
 export class ListCalendar {
@@ -14,13 +15,13 @@ export class ListCalendar {
     private communitiesDaf: CommunitiesDAF,
   ) {}
 
-  async execute({ month }: ListCalendarRequest) {
-    const firstDayOfMonth = moment()
-      .month(month - 1)
+  async execute({ month, year }: ListCalendarRequest) {
+    const baseYear = year ?? moment().year();
+
+    const firstDayOfMonth = moment({ year: baseYear, month: month - 1 })
       .startOf('month')
       .get('date');
-    const lastDayOfMonth = moment()
-      .month(month - 1)
+    const lastDayOfMonth = moment({ year: baseYear, month: month - 1 })
       .endOf('month')
       .get('date');
 
@@ -97,14 +98,22 @@ export class ListCalendar {
         );
       }
 
-      // Se missa devocional cai em dia ordinário, remove outros agendamentos e prevalece a devocional
+      // Se missa devocional cai em dia ordinário, remove agendamentos de mesmo horário e prevalece a missa devocional
       const hasDevotional = massSchedulesInDate.some(
         (s) => s.type === 'devotional',
       );
+      const devocionalTimes = massSchedulesInDate
+        .filter((s) => s.type === 'devotional')
+        .flatMap((s) => s.times.map((t) => t.startTime));
       if (hasDevotional) {
-        massSchedulesInDate = massSchedulesInDate.filter(
-          (s) => s.type === 'devotional',
-        );
+        massSchedulesInDate = massSchedulesInDate.filter((s) => {
+          if (s.type === 'devotional') return true;
+
+          const overlapping = s.times.some((t) =>
+            devocionalTimes.includes(t.startTime),
+          );
+          return !overlapping;
+        });
       }
 
       const priorityTypes = ['solemnity', 'devotional', 'ordinary'];
