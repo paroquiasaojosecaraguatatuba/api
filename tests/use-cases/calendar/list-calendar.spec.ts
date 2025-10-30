@@ -1,16 +1,17 @@
 import type { Community } from '@/entities/community';
-import { ListCalendar } from '@/use-cases/calendar/list-calendar';
+import { ListCalendarUseCase } from '@/use-cases/calendar/list-calendar';
 import { makeId } from '@/use-cases/factories/make-id';
 import { InMemoryCommunitiesDAF } from '@tests/database/in-memory-communities-daf';
+import { InMemoryMassScheduleExceptionsDAF } from '@tests/database/in-memory-mass-schedule-exceptions-daf';
 import { InMemoryMassSchedulesDAF } from '@tests/database/in-memory-mass-schedules-daf';
 import { makeCommunity } from '@tests/factories/make-community';
 import { makeMassSchedule } from '@tests/factories/make-mass-schedule';
-import moment from 'moment';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 let massSchedulesDaf: InMemoryMassSchedulesDAF;
+let massScheduleExceptionsDaf: InMemoryMassScheduleExceptionsDAF;
 let communitiesDaf: InMemoryCommunitiesDAF;
-let sut: ListCalendar;
+let sut: ListCalendarUseCase;
 
 let communityParish: Community;
 let communitySacredHeart: Community;
@@ -18,8 +19,13 @@ let communitySacredHeart: Community;
 describe('List Calendar Use Case', () => {
   beforeEach(() => {
     massSchedulesDaf = new InMemoryMassSchedulesDAF();
+    massScheduleExceptionsDaf = new InMemoryMassScheduleExceptionsDAF();
     communitiesDaf = new InMemoryCommunitiesDAF();
-    sut = new ListCalendar(massSchedulesDaf, communitiesDaf);
+    sut = new ListCalendarUseCase(
+      massSchedulesDaf,
+      massScheduleExceptionsDaf,
+      communitiesDaf,
+    );
 
     communityParish = makeCommunity({
       name: 'Paróquia São José',
@@ -317,6 +323,34 @@ describe('List Calendar Use Case', () => {
               }),
             }),
           ],
+        }),
+      ]),
+    );
+  });
+
+  it('should mark exceptions in mass schedules', async () => {
+    await massScheduleExceptionsDaf.create({
+      id: makeId(),
+      scheduleId: '01K8M7GZSNKGNQE99PJJ197BHZ', // Sunday mass at parish
+      exceptionDate: '2025-01-05',
+      startTime: '9:30',
+      reason: 'No mass this day',
+      createdBy: makeId(),
+      createdAt: new Date().toISOString(),
+    });
+
+    const { calendar } = await sut.execute({ month: 1, year: 2025 });
+
+    const dayWithException = calendar.find((day) => day.date === '2025-01-05');
+
+    expect(dayWithException).toBeDefined();
+    expect(dayWithException?.schedules).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'mass',
+          massType: 'ordinary',
+          startTime: '9:30',
+          status: 'canceled',
         }),
       ]),
     );

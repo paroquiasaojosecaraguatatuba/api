@@ -215,52 +215,22 @@ CREATE INDEX IF NOT EXISTS idx_mass_schedules_day_month ON mass_schedules(day_of
 CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_schedule ON mass_schedule_times(schedule_id);
 CREATE INDEX IF NOT EXISTS idx_mass_schedule_times_time ON mass_schedule_times(time);
 
--- -- -- ✅ Missas de uma comunidade específica
--- -- SELECT 
--- --   ms.title, ms.type, ms.recurrence_type, ms.day_of_week, ms.day_of_month, ms.week_of_month,
--- --   GROUP_CONCAT(mst.time) as times
--- -- FROM mass_schedules ms
--- -- JOIN mass_schedule_times mst ON mst.schedule_id = ms.id
--- -- WHERE ms.community_id = ? AND ms.active = true AND mst.active = true
--- -- GROUP BY ms.id;
+CREATE TABLE IF NOT EXISTS mass_schedule_exceptions (
+  id VARCHAR(26) PRIMARY KEY NOT NULL,
+  schedule_id VARCHAR(26) NOT NULL,
+  exception_date DATE NOT NULL,
+  start_time TIME NOT NULL,
+  reason VARCHAR(255) NOT NULL,
+  created_by VARCHAR(26) NOT NULL, 
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  
+  FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
+  
+  UNIQUE(schedule_id, exception_date, start_time)
+);
 
--- -- -- ✅ Todas as missas dominicais da região
--- -- SELECT c.name, ms.title, GROUP_CONCAT(mst.time) as times
--- -- FROM mass_schedules ms
--- -- JOIN communities c ON c.id = ms.community_id
--- -- JOIN mass_schedule_times mst ON mst.schedule_id = ms.id
--- -- WHERE ms.day_of_week = 0 AND ms.active = true AND mst.active = true
--- -- GROUP BY ms.id
--- -- ORDER BY c.name, mst.time;
-
--- -- ✅ Tabela para exceções de agendamentos
--- CREATE TABLE IF NOT EXISTS mass_schedule_exceptions (
---   id VARCHAR(26) PRIMARY KEY NOT NULL,
---   schedule_id VARCHAR(26) NOT NULL,
---   exception_date DATE NOT NULL, -- Data específica da exceção
---   time TIME, -- NULL = cancelar todos os horários, específico = cancelar só esse horário
---   exception_type VARCHAR(20) NOT NULL CHECK (exception_type IN ('cancelled', 'rescheduled', 'special_event')),
---   reason VARCHAR(255), -- "Festa da Padroeira", "Manutenção da Igreja", "Retiro Espiritual"
-  
---   -- ✅ Para reagendamento (tipo 'rescheduled')
---   new_time TIME, -- Novo horário se foi reagendado
---   new_location VARCHAR(255), -- Se mudou de local
-  
---   -- ✅ Auditoria
---   created_by VARCHAR(26) NOT NULL, -- Quem fez a exceção
---   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  
---   FOREIGN KEY (schedule_id) REFERENCES mass_schedules(id) ON DELETE CASCADE,
---   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
-  
---   -- ✅ Constraint: Uma exceção por agendamento/data/horário
---   UNIQUE(schedule_id, exception_date, time)
--- );
-
--- -- ✅ Índices para consultas rápidas
--- CREATE INDEX IF NOT EXISTS idx_mass_exceptions_schedule_date ON mass_schedule_exceptions(schedule_id, exception_date);
--- CREATE INDEX IF NOT EXISTS idx_mass_exceptions_date ON mass_schedule_exceptions(exception_date);
--- CREATE INDEX IF NOT EXISTS idx_mass_exceptions_type ON mass_schedule_exceptions(exception_type);
+CREATE INDEX IF NOT EXISTS idx_mass_exceptions_date ON mass_schedule_exceptions(exception_date);
 
 -- -- -- Cancelar missa das 19:30 no dia 25/12/2024
 -- -- INSERT INTO mass_schedule_exceptions (

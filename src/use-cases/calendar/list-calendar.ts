@@ -1,29 +1,35 @@
 import type { CalendarSchedule } from '@/entities/calendar-schedule';
 import type { Community } from '@/entities/community';
 import type { CommunitiesDAF } from '@/services/database/communities-daf';
+import type { MassScheduleExceptionsDAF } from '@/services/database/mass-schedule-exceptions-daf';
 import type { MassSchedulesDAF } from '@/services/database/mass-schedules-daf';
 import moment from 'moment';
 
-interface ListCalendarRequest {
+interface ListCalendarUseCaseRequest {
   month: number;
   year: number;
 }
 
-export class ListCalendar {
+export class ListCalendarUseCase {
   constructor(
     private massSchedulesDaf: MassSchedulesDAF,
+    private massSchedulesExceptionsDaf: MassScheduleExceptionsDAF,
     private communitiesDaf: CommunitiesDAF,
   ) {}
 
-  async execute({ month, year }: ListCalendarRequest) {
+  async execute({ month, year }: ListCalendarUseCaseRequest) {
     const baseYear = year ?? moment().year();
 
-    const firstDayOfMonth = moment({ year: baseYear, month: month - 1 })
-      .startOf('month')
-      .get('date');
-    const lastDayOfMonth = moment({ year: baseYear, month: month - 1 })
-      .endOf('month')
-      .get('date');
+    const firstDateOfMonth = moment({
+      year: baseYear,
+      month: month - 1,
+    }).startOf('month');
+    const lastDateOfMonth = moment({ year: baseYear, month: month - 1 }).endOf(
+      'month',
+    );
+
+    const firstDayOfMonth = firstDateOfMonth.get('date');
+    const lastDayOfMonth = lastDateOfMonth.get('date');
 
     const communities = await this.communitiesDaf.findAll();
 
@@ -140,6 +146,7 @@ export class ListCalendar {
               isPrecept: schedule.isPrecept,
               startTime: time.startTime,
               endTime: time.endTime,
+              status: 'active',
               community: {
                 id: schedule.communityId,
                 name: community.name,
@@ -163,6 +170,52 @@ export class ListCalendar {
         return aFirstTime[0] - bFirstTime[0];
       }),
     }));
+
+    const exceptions = await this.massSchedulesExceptionsDaf.findMany({
+      from: firstDateOfMonth.format('YYYY-MM-DD'),
+      to: lastDateOfMonth.format('YYYY-MM-DD'),
+    });
+
+    // marca agendamentos em mesmo horário de exceções com status 'canceled'
+    if (exceptions.length > 0) {
+      calendar = calendar.map((day) => {
+        const dayExceptions = exceptions.filter(
+          (ex) => ex.exceptionDate === day.date,
+        );
+
+        if (dayExceptions.length === 0) {
+          return day;
+        }
+
+        const updatedSchedules = day.schedules.map((schedule) => {
+          const matchingException = dayExceptions.find(
+            (ex) =>
+              ex.startTime === schedule.startTime &&
+              ex.scheduleId ===
+                massSchedules.find(
+                  (ms) =>
+                    ms.communityId === schedule.community.id &&
+                    ms.times.some((t) => t.startTime === schedule.startTime),
+                )?.id,
+          );
+
+          if (matchingException) {
+            return {
+              ...schedule,
+              status: 'canceled',
+              cancellationReason: matchingException.reason,
+            };
+          }
+
+          return schedule;
+        });
+
+        return {
+          ...day,
+          schedules: updatedSchedules,
+        };
+      });
+    }
 
     return { calendar };
   }
