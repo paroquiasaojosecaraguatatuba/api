@@ -45,6 +45,41 @@ export class D1EventSchedulesDAF implements EventSchedulesDAF {
     };
   }
 
+  async findMany(data: { from: string; to: string }): Promise<EventSchedule[]> {
+    const eventSchedules = await this.d1
+      .prepare(
+        'SELECT * FROM event_schedules WHERE eventDate BETWEEN ? AND ? ORDER BY eventDate, startTime',
+      )
+      .bind(data.from, data.to)
+      .all<{
+        id: string;
+        communityId: string;
+        title: string;
+        type: string;
+        eventDate: string;
+        startTime: string;
+        endTime: string | null;
+        customLocation: string | null;
+        orientations: string | null;
+        createdAt: string;
+        updatedAt: string | null;
+      }>();
+
+    return eventSchedules.results.map((eventSchedule) => ({
+      id: eventSchedule.id,
+      communityId: eventSchedule.communityId,
+      title: eventSchedule.title,
+      type: eventSchedule.type as EventSchedule['type'],
+      eventDate: eventSchedule.eventDate,
+      startTime: eventSchedule.startTime,
+      endTime: eventSchedule.endTime ?? undefined,
+      customLocation: eventSchedule.customLocation ?? undefined,
+      orientations: eventSchedule.orientations ?? undefined,
+      createdAt: eventSchedule.createdAt,
+      updatedAt: eventSchedule.updatedAt ?? undefined,
+    }));
+  }
+
   async create({
     id,
     communityId,

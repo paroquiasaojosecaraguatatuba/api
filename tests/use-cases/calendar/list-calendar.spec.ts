@@ -2,6 +2,7 @@ import type { Community } from '@/entities/community';
 import { ListCalendarUseCase } from '@/use-cases/calendar/list-calendar';
 import { makeId } from '@/use-cases/factories/make-id';
 import { InMemoryCommunitiesDAF } from '@tests/database/in-memory-communities-daf';
+import { InMemoryEventSchedulesDAF } from '@tests/database/in-memory-event-schedules-daf';
 import { InMemoryMassScheduleExceptionsDAF } from '@tests/database/in-memory-mass-schedule-exceptions-daf';
 import { InMemoryMassSchedulesDAF } from '@tests/database/in-memory-mass-schedules-daf';
 import { makeCommunity } from '@tests/factories/make-community';
@@ -9,6 +10,7 @@ import { makeMassSchedule } from '@tests/factories/make-mass-schedule';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 let massSchedulesDaf: InMemoryMassSchedulesDAF;
+let eventSchedulesDaf: InMemoryEventSchedulesDAF;
 let massScheduleExceptionsDaf: InMemoryMassScheduleExceptionsDAF;
 let communitiesDaf: InMemoryCommunitiesDAF;
 let sut: ListCalendarUseCase;
@@ -19,10 +21,12 @@ let communitySacredHeart: Community;
 describe('List Calendar Use Case', () => {
   beforeEach(() => {
     massSchedulesDaf = new InMemoryMassSchedulesDAF();
+    eventSchedulesDaf = new InMemoryEventSchedulesDAF();
     massScheduleExceptionsDaf = new InMemoryMassScheduleExceptionsDAF();
     communitiesDaf = new InMemoryCommunitiesDAF();
     sut = new ListCalendarUseCase(
       massSchedulesDaf,
+      eventSchedulesDaf,
       massScheduleExceptionsDaf,
       communitiesDaf,
     );

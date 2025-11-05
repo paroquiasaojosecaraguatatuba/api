@@ -1,6 +1,7 @@
 import type { CalendarSchedule } from '@/entities/calendar-schedule';
 import type { Community } from '@/entities/community';
 import type { CommunitiesDAF } from '@/services/database/communities-daf';
+import type { EventSchedulesDAF } from '@/services/database/event-schedules-daf';
 import type { MassScheduleExceptionsDAF } from '@/services/database/mass-schedule-exceptions-daf';
 import type { MassSchedulesDAF } from '@/services/database/mass-schedules-daf';
 import moment from 'moment';
@@ -13,6 +14,7 @@ interface ListCalendarUseCaseRequest {
 export class ListCalendarUseCase {
   constructor(
     private massSchedulesDaf: MassSchedulesDAF,
+    private eventSchedulesDaf: EventSchedulesDAF,
     private massSchedulesExceptionsDaf: MassScheduleExceptionsDAF,
     private communitiesDaf: CommunitiesDAF,
   ) {}
@@ -34,6 +36,11 @@ export class ListCalendarUseCase {
     const communities = await this.communitiesDaf.findAll();
 
     const massSchedules = await this.massSchedulesDaf.findAll();
+
+    const eventSchedules = await this.eventSchedulesDaf.findMany({
+      from: firstDateOfMonth.format('YYYY-MM-DD'),
+      to: lastDateOfMonth.format('YYYY-MM-DD'),
+    });
 
     let calendar: CalendarSchedule[] = [];
 
@@ -124,36 +131,67 @@ export class ListCalendarUseCase {
 
       const priorityTypes = ['solemnity', 'devotional', 'ordinary'];
 
+      const schedules: CalendarSchedule['schedules'] = massSchedulesInDate
+        .sort(
+          (a, b) =>
+            priorityTypes.indexOf(a.type) - priorityTypes.indexOf(b.type),
+        )
+        .flatMap((schedule) => {
+          const community = communities.find(
+            (c) => c.id === schedule.communityId,
+          ) as Community;
+
+          return schedule.times.map((time) => ({
+            type: 'mass' as const,
+            title: schedule.title,
+            massType: schedule.type,
+            orientations: schedule.orientations,
+            isPrecept: schedule.isPrecept,
+            startTime: time.startTime,
+            endTime: time.endTime,
+            status: 'active',
+            community: {
+              id: schedule.communityId,
+              name: community.name,
+              address: community.address,
+            },
+          }));
+        });
+
+      const eventSchedulesInDate = eventSchedules.filter(
+        (es) => es.eventDate === date,
+      );
+
+      if (eventSchedulesInDate.length > 0) {
+        const eventSchedulesMapped = eventSchedulesInDate.map((es) => {
+          const community = communities.find(
+            (c) => c.id === es.communityId,
+          ) as Community;
+
+          return {
+            type: 'event' as const,
+            title: es.title,
+            eventType: es.type,
+            startTime: es.startTime,
+            endTime: es.endTime,
+            customLocation: es.customLocation,
+            orientations: es.orientations,
+            community: {
+              id: es.communityId,
+              name: community.name,
+              address: community.address,
+            },
+          };
+        });
+
+        schedules.push(...eventSchedulesMapped);
+      }
+
       calendar.push({
         date,
         dayOfWeek: moment(date).weekday(),
         dayOfWeekLabel: moment(date).format('dddd'),
-        schedules: massSchedulesInDate
-          .sort(
-            (a, b) =>
-              priorityTypes.indexOf(a.type) - priorityTypes.indexOf(b.type),
-          )
-          .flatMap((schedule) => {
-            const community = communities.find(
-              (c) => c.id === schedule.communityId,
-            ) as Community;
-
-            return schedule.times.map((time) => ({
-              type: 'mass' as const,
-              title: schedule.title,
-              massType: schedule.type,
-              orientations: schedule.orientations,
-              isPrecept: schedule.isPrecept,
-              startTime: time.startTime,
-              endTime: time.endTime,
-              status: 'active',
-              community: {
-                id: schedule.communityId,
-                name: community.name,
-                address: community.address,
-              },
-            }));
-          }),
+        schedules,
       });
     }
 
