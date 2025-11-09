@@ -6,6 +6,7 @@ import { InMemoryEventSchedulesDAF } from '@tests/database/in-memory-event-sched
 import { InMemoryMassScheduleExceptionsDAF } from '@tests/database/in-memory-mass-schedule-exceptions-daf';
 import { InMemoryMassSchedulesDAF } from '@tests/database/in-memory-mass-schedules-daf';
 import { makeCommunity } from '@tests/factories/make-community';
+import { makeEventSchedule } from '@tests/factories/make-event-schedule';
 import { makeMassSchedule } from '@tests/factories/make-mass-schedule';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -355,6 +356,58 @@ describe('List Calendar Use Case', () => {
           massType: 'ordinary',
           startTime: '9:30',
           status: 'canceled',
+        }),
+      ]),
+    );
+  });
+
+  it('should schedule events', async () => {
+    const eventSchedules = [
+      makeEventSchedule({
+        communityId: communityParish.id,
+        title: 'Aniversário da Paróquia',
+        type: 'anniversary',
+        eventDate: '2025-01-15',
+        startTime: '18:00',
+      }),
+      makeEventSchedule({
+        communityId: communitySacredHeart.id,
+        title: 'Festa do Sagrado Coração',
+        type: 'feast',
+        eventDate: '2025-01-15',
+        startTime: '19:00',
+      }),
+    ];
+
+    eventSchedulesDaf.eventSchedules.push(...eventSchedules);
+
+    const { calendar } = await sut.execute({ month: 1, year: 2025 });
+
+    expect(calendar).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          date: '2025-01-15',
+          dayOfWeek: 3,
+          schedules: expect.arrayContaining([
+            expect.objectContaining({
+              type: 'event',
+              title: 'Aniversário da Paróquia',
+              community: expect.objectContaining({
+                id: communityParish.id,
+                name: communityParish.name,
+                address: communityParish.address,
+              }),
+            }),
+            expect.objectContaining({
+              type: 'event',
+              title: 'Festa do Sagrado Coração',
+              community: expect.objectContaining({
+                id: communitySacredHeart.id,
+                name: communitySacredHeart.name,
+                address: communitySacredHeart.address,
+              }),
+            }),
+          ]),
         }),
       ]),
     );
