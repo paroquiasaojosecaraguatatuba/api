@@ -1,5 +1,5 @@
 import { getAppContext } from '@/http/utils/getAppContext';
-import { usePastoralSchema } from '@/schemas/usePastoralSchema';
+import { usePastoralSchema } from '@/schemas/use-pastoral-schema';
 import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found-error';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 import { makeEditPastoralUseCase } from '@/use-cases/factories/pastorals/make-edit-pastoral-use-case';

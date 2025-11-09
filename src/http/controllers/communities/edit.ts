@@ -1,5 +1,5 @@
 import { getAppContext } from '@/http/utils/getAppContext';
-import { useCommunitySchema } from '@/schemas/useCommunitySchema';
+import { useCommunitySchema } from '@/schemas/use-community-schema';
 import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found-error';
 import { ParishAlreadyExistsError } from '@/use-cases/errors/parish-already-exists-error';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';

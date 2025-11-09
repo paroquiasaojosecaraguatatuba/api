@@ -1,5 +1,5 @@
 import { getAppContext } from '@/http/utils/getAppContext';
-import { useImageSchema } from '@/schemas/useImageSchema';
+import { useImageSchema } from '@/schemas/use-image-schema';
 import { makeUploadImageUseCase } from '@/use-cases/factories/attachments/make-upload-image-use-case';
 
 export const upload: ControllerFn = async (c) => {

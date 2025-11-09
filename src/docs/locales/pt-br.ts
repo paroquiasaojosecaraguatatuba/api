@@ -1,7 +1,7 @@
 import { attachmentPaths } from '../paths/attachments';
 import { blogCategoryPaths } from '../paths/blog/categories';
 import { blogDraftPaths } from '../paths/blog/drafts';
-import { blogPostDraftPaths } from '../paths/blog/postDrafts';
+import { blogPostDraftPaths } from '../paths/blog/post-drafts';
 import { blogPostPaths } from '../paths/blog/posts';
 import { clergyPaths } from '../paths/clergy';
 import { communityPaths } from '../paths/communities';

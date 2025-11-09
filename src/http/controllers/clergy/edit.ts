@@ -1,5 +1,5 @@
 import { getAppContext } from '@/http/utils/getAppContext';
-import { useClergySchema } from '@/schemas/useClergySchema';
+import { useClergySchema } from '@/schemas/use-clergy-schema';
 import { AttachmentNotFoundError } from '@/use-cases/errors/attachment-not-found-error';
 import { makeEditClergyUseCase } from '@/use-cases/factories/clergy/make-edit-clergy-use-case';
 import { ClergyPositionAlreadyExistsError } from '@/use-cases/errors/clergy-position-already-exists-error';

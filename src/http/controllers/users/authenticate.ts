@@ -1,4 +1,4 @@
-import { useLoginSchema } from '@/schemas/useLoginSchema';
+import { useLoginSchema } from '@/schemas/use-login-schema';
 import { getAppContext } from '@/http/utils/getAppContext';
 import { createAccessToken } from 'serverless-crypto-utils';
 import { InvalidCredentialsError } from '@/use-cases/errors/invalid-credentials-error';

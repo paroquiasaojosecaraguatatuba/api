@@ -1,4 +1,4 @@
-import { useUserSchema } from '@/schemas/useUserSchema';
+import { useUserSchema } from '@/schemas/use-user-schema';
 import { getAppContext } from '@/http/utils/getAppContext';
 import { ResourceAlreadyExistsError } from '@/use-cases/errors/resource-already-exists-error';
 import { makeRegisterUseCase } from '@/use-cases/factories/users/make-register-use-case';
